@@ -10,6 +10,7 @@ int main()
 {
     // DemoParameters();
     DemoArray();
+    DemoIfstream();
     // DemoBinaryTree();
     // DemoHash();
 

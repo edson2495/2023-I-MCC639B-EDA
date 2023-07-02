@@ -1,6 +1,7 @@
 #include <iostream> // cout
 #include <fstream>  // ofstream, ifstream
 #include <cmath>
+#include <memory>
 #include "demo.h"
 #include "array.h"
 using namespace std;
@@ -16,6 +17,20 @@ void DemoSmartPointers(){
         //  (*pv3).insert(i);
         //  rA.insert(i);
     }
+}
+
+void DemoIfstream(){
+
+    cout<<endl<<"------------------DEMO INPUT FILESTREAM----------------"<<endl<<endl;
+
+    ifstream test("test.txt");
+    CArray<float>  *ptrArray = new CArray<float>("Edson Cáceres");
+
+    cout<<"----------------------------Reading from test.txt------------------------------"<<endl;
+    test>>*ptrArray;
+    cout<<"----------------------------Printing Array-------------------------------------"<<endl;
+    cout<<*ptrArray;
+    ptrArray->~CArray();//it doesn't destroy itself
 }
 
 void DemoArray(){   

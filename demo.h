@@ -6,5 +6,6 @@ void DemoBinaryTree();
 void DemoHash();
 
 void DemoSmartPointers();
+void DemoIfstream();
 
 #endif // __DEMO_H__

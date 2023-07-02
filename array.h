@@ -40,6 +40,13 @@ public:
     {  return m_vcount;    }
     value_type &operator[](size_t pos)
     {   return m_pVect[pos];    }
+
+    void insertInBlock(size_t vcount, value_type first_element){
+        for(value_type i = first_element ; i < first_element +  vcount; i++){
+            this->insert(sqrt(i));
+        }
+    }
+
 };
 
 template <typename T>
@@ -64,10 +71,12 @@ ostream &operator<<(ostream &os, CArray<T> &obj){
     return os;
 }
 
-// TODO
 template <typename T>
 istream & operator>>(istream &is, CArray<T> &obj){
-    // TODO
+    size_t vcount,vmax; //the value vmax doesn't matter 'cause it is updated automatically in the class
+    float first_element; //value_type instead of float doesn't work 'cause is out of scope
+    is>>vcount>>vmax>>first_element;
+    obj.insertInBlock(vcount,pow(first_element,2));
     return is;
 }
 
