@@ -41,10 +41,19 @@ public:
     value_type &operator[](size_t pos)
     {   return m_pVect[pos];    }
 
-    void insertInBlock(size_t vcount, value_type first_element){
-        for(value_type i = first_element ; i < first_element +  vcount; i++){
-            this->insert(sqrt(i));
-        }
+    void insertInBlock(size_t vcount, size_t vmax, istream &is){
+
+        //freeing up space and assigning space in memory
+        delete [] m_pVect;
+        m_vcount = 0;
+        m_vmax = vmax;
+        m_pVect = new value_type[m_vmax];
+
+        //inserting values from .txt file
+        value_type value;
+        while (is >> value)
+            this->insert(value);
+
     }
 
 };
@@ -73,10 +82,9 @@ ostream &operator<<(ostream &os, CArray<T> &obj){
 
 template <typename T>
 istream & operator>>(istream &is, CArray<T> &obj){
-    size_t vcount,vmax; //the value vmax doesn't matter 'cause it is updated automatically in the class
-    float first_element; //value_type instead of float doesn't work 'cause is out of scope
-    is>>vcount>>vmax>>first_element;
-    obj.insertInBlock(vcount,pow(first_element,2));
+    size_t vcount,vmax;
+    is>>vcount>>vmax;
+    obj.insertInBlock(vcount,vmax,is);
     return is;
 }
 

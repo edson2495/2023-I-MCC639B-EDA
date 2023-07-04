@@ -7,5 +7,6 @@ void DemoHash();
 
 void DemoSmartPointers();
 void DemoIfstream();
+void edson();
 
 #endif // __DEMO_H__
