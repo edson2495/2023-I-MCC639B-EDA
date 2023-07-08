@@ -69,12 +69,10 @@ public:
         reset(vmax);
 
         //inserting values from .txt file
-        int i = 0;
         value_type value;
 
-        while(is >> value && i != vcount){ //keeping in mind the m_vmax
+        while(is >> value && m_vcount != vcount){ //keeping in mind the m_vmax
             this->insert(value);
-            i++;
         }
 
     }
