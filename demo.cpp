@@ -30,7 +30,7 @@ void DemoIfstream(){
     test>>*ptrArray;
     cout<<"----------------------------Printing Array-------------------------------------"<<endl;
     cout<<*ptrArray;
-    //ptrArray->~CArray();//it doesn't destroy itself
+    ptrArray->~CArray();//it doesn't destroy itself
     test.close();
 }
 

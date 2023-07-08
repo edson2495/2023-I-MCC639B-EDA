@@ -54,7 +54,7 @@ public:
         m_pVect = new value_type[m_vmax];
     }
 
-    void reset(size_t vcount, size_t vmax){
+    void reset(size_t vmax){
         setM_vcount(0);
         setM_vmax(vmax);
         resetM_pVect();
@@ -66,12 +66,16 @@ public:
         is>>vcount>>vmax;
         
         //freeing up space and assigning space in memory
-        reset(vcount,vmax);
+        reset(vmax);
 
         //inserting values from .txt file
+        int i = 0;
         value_type value;
-        while (is >> value && m_vcount != m_vmax) //keeping in mind the m_vmax
+
+        while(is >> value && i != vcount){ //keeping in mind the m_vmax
             this->insert(value);
+            i++;
+        }
 
     }
 
