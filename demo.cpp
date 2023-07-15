@@ -1,6 +1,7 @@
 #include <iostream> // cout
 #include <fstream>  // ofstream, ifstream
 #include <cmath>
+#include <memory>
 #include "demo.h"
 #include "array.h"
 #include "matrix.h"
@@ -88,16 +89,21 @@ void DemoSmartPointers(){
 
 void DemoDynamicMatrixes(){
 
+    cout << "----------------mat1--------------------" << endl;
     CMatrix<MatrixTraitFloat> mat1(3, 4);
     mat1.fill(1);
+    //cout << "k : " << mat1.m_rows<<endl;
     cout << mat1;
 
+    cout << "----------------mat1--------------------" << endl;
     CMatrix<MatrixTraitFloat> mat2(4, 5);
     mat2.fill(2.5);
     cout << mat2;
-
+    
+    cout << "----------------mat1*mat2--------------------" << endl;
     // TODO #1: overload operator*(CMatrix<Traits> &other)
-    // CMatrix<MatrixTraitFloat> mat3 = mat1 * mat2;
+    CMatrix<MatrixTraitFloat> mat3 = mat1 * mat2;
+    //cout<< mat3;
 
     // TODO #2: Create Iterator for CMatrix
     // recorrer(mat3, ::print<TX>);
@@ -113,11 +119,13 @@ void DemoDynamicMatrixes(){
     // recorrer(mat1, ClassX<TX>(8) );
     // recorrer(mat1, ::print<TX>); cout << endl;
 
+    cout << "----------------Operator [] and ()-------------------" << endl;
     // // TODO #3: prepare Matrix to be used as a matrix from outside
     // // overload operator[](size_t row)
-    // mat1[2][3] = 8.2;
-    // mat1(2, 2) = 7.5; // Operator () is returning a value_type &
-    // cout << mat1;
+    mat1[2][3] = 8.2;
+    mat1(2, 2) = 7.5; // Operator () is returning a value_type &
+    cout << mat1;
+    cout << endl;
 }
 
 void DemoPreandPostIncrement(){
