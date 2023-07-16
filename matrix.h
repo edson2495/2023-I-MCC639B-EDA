@@ -30,8 +30,17 @@ public:
         return *this;
     }
 
+    value_type operator+=(const value_type value) {//c
+        m_key += value;
+        return m_key;
+    }
+
     value_type    getData() const   { return m_key; }
     value_type&   getDataRef()      { return m_key; }
+
+    constexpr operator value_type() const noexcept { // since C++14 //----------------------------------------------
+        return m_key;
+    }
 
     bool operator<(const myself& other) const { 
         return m_key < other.m_key;
@@ -163,12 +172,13 @@ public:
     myself operator*(myself &other){
         if(m_cols == other.getM_rowss()){
             myself answer(m_rows,other.getM_cols());
-            myself &myself_value = *this;
+            myself &me = *this;
             for(auto row = 0; row < m_rows; row++){
                 for(auto col = 0; col < other.getM_cols(); col++){
                     answer[row][col] = 0 ; //elimino valores proximos al 0
                     for(auto i = 0 ; i < m_cols ; i++){
-                        answer[row][col] =  answer[row][col].getData() + myself_value[row][i].getData() * other[i][col].getData();
+                        //answer[row][col] =  answer[row][col].getData() + me[row][i].getData() * other[i][col].getData();
+                        answer[row][col] +=  me[row][i] * other[i][col];
                     }
                 }
             }
