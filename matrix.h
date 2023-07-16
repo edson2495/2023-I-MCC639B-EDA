@@ -38,7 +38,7 @@ public:
     value_type    getData() const   { return m_key; }
     value_type&   getDataRef()      { return m_key; }
 
-    constexpr operator value_type() const noexcept { // since C++14 //----------------------------------------------
+    constexpr operator value_type() const noexcept { // since C++14
         return m_key;
     }
 
@@ -65,13 +65,9 @@ template <typename Traits>
 class CMatrix
 {public:
     using value_type      = typename Traits::value_type;
-    //using LinkedValueType = typename Traits::LinkedValueType;
-
-    //using LinkedValueType = typename Traits::LinkedValueType;
     using Node            = typename Traits::Node;
-    //using CompareFn       = typename Traits::CompareFn;
     using myself          = CMatrix<Traits>;
-    //using iterator        = matrix_forward_iterator<myself>;
+    //using iterator        = matrix_iterator<myself>;
 
     private:
         Node **m_ppMatrix   = nullptr;
@@ -131,7 +127,7 @@ public:
         os << m_rows << " " << m_cols << endl;
         for(auto y = 0 ; y < m_rows ; y++){
             for(auto x = 0 ; x < m_cols ; x++)
-                os << m_ppMatrix[y][x].getData() << " ";
+                os << m_ppMatrix[y][x] << " ";
             os << endl;
         }
     }

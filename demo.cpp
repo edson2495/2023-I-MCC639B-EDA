@@ -119,9 +119,10 @@ void DemoDynamicMatrixes(){
     // recorrer(mat1, ClassX<TX>(8) );
     // recorrer(mat1, ::print<TX>); cout << endl;
 
-    cout << "----------------Operator [] and ()-------------------" << endl;
+    
     // // TODO #3: prepare Matrix to be used as a matrix from outside
     // // overload operator[](size_t row)
+    cout << "----------------Operator [] and ()-------------------" << endl;
     mat1[2][3] = 8.2;
     mat1(2, 2) = 7.5; // Operator () is returning a value_type &
     cout << mat1;
