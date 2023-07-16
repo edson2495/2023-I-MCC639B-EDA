@@ -3,7 +3,8 @@
 #include <cmath>
 #include <memory>
 #include "demo.h"
-#include "array.h"
+//#include "array.h"
+#include "array_iterator_without_inheritance.h"
 #include "recorrer.h"
 using namespace std;
 
@@ -121,7 +122,7 @@ void DemoIterators(){
 }
 
 void DemoReverseIterators(){
-    cout << "DEMO REVERSE ITERATORS FOR ARRAY AS A CONTEINER : " << endl;
+    cout << "DEMO REVERSE ITERATORS FOR ARRAY AS A CONTAINER : " << endl;
     CArray< TraitArrayIntInt > v1("Edson Cáceres");
     v1.insert(30, 40);
     v1.insert(18, 45);
@@ -134,6 +135,28 @@ void DemoReverseIterators(){
     cout << v1 << endl;
     cout << "Printing desc : " << endl;
     recorrer(v1.rbegin(), v1.rend(), ::print<TX>);
+}
+
+void DemoIteratorsWithoutInheritance(){
+    cout <<endl<< "DEMO ITERATORS WITHOUT INHERITANCE FOR ARRAY AS A CONTAINER : " <<endl<< endl;
+    CArray< TraitArrayIntInt > v1("Edson Cáceres");
+    v1.insert(30, 40);
+    v1.insert(18, 45);
+    v1.insert(20, 35);
+    v1.insert(7 , 64);
+    v1.insert(12, 25);
+    v1.insert(8 , 17);
+
+    cout << "Printing operator with << : " << endl;
+    cout << v1 << endl;
+
+    cout << "Printing with iterator : " << endl;
+    recorrer(v1.begin(), v1.end(), ::print<TX>);
+    cout<< endl;
+
+    cout << "Printing with reverse iterator : " << endl;
+    recorrer(v1.rbegin(), v1.rend(), ::print<TX>);
+    cout<< endl;
 }
 
 void DemoBinaryTree()

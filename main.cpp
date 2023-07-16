@@ -14,7 +14,8 @@ int main()
     // DemoParameters();
     //DemoArray();
     //DemoIterators();
-    DemoReverseIterators();
+    //DemoReverseIterators();
+    DemoIteratorsWithoutInheritance();
     // DemoBinaryTree();
     // DemoHash();
 

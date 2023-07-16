@@ -4,6 +4,7 @@
 void DemoArray();
 void DemoIterators();
 void DemoReverseIterators();
+void DemoIteratorsWithoutInheritance();
 void DemoBinaryTree();
 void DemoHash();
 
