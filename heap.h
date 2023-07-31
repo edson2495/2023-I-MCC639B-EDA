@@ -11,8 +11,9 @@
 
 using namespace std;
 
-using XTraitFloatStringDesc = XTraitTrait<float, string, std::less<KeyNode<int, int > &>>;>;
-using XTraitIntIntAsc       = XTraitTrait<int  , int   , std::greater<KeyNode<int, int > &>>;
+using XTraitFloatStringDesc = XTrait<float, string, std::less<KeyNode<int, int > &>>;
+using XTraitIntIntAsc       = XTrait<int  , int   , std::greater<KeyNode<int, int > &>>;
+using XTraitIntIntDesc       = XTrait<float  , int   , std::less<KeyNode<float, int > &>>;
 
 // Created by: @ecuadros
 template <typename Traits>
@@ -27,36 +28,59 @@ public:
 private:
     CArray<Traits>    m_heap;
     string    m_name = "Empty";
+    CompareFn compareFn_;
 public:
     CHeap(string name)  : m_name(name){ destroy();  }
     CHeap()                           { destroy();  }
     virtual ~CHeap(){
         cerr << "Destroying " << m_name << "..." << endl;
-        reset();
+        destroy();
     }
     void destroy(){
         m_heap.destroy();
         m_heap.insert(0, 0);
     }
-
-    // CHeap operator=(CHeap &other){
-    //     destroy();
-        
-    // }
     
     void insert(const value_type &key, LinkedValueType value){
         m_heap.insert(key, value);
-        heapifyAsc();
-        // cout << "Key=" << key << " Value=" << value << "\tinserted, m_vcount=" << m_vcount << " m_vmax=" << m_vmax << endl;
-    }
-    // TODO: complete heapifyAsc function (useful for insertion)
-    void heapifyAsc(){
-        // Use CompareFn
+        //sort(); //if you want the array to keep it sorted always
     }
 
-    // TODO: complete heapifyDesc function (useful when we remove an element)
-    void heapifyDesc(){
-        // Use CompareFn
+    size_t left(const size_t n){
+        assert(n >= 1);
+        return 2*n;
+    }
+
+    size_t right(const size_t n){
+        assert(n >= 1);
+        return 2*n + 1;
+    }
+
+    size_t size(){
+        return m_heap.size() - 1;
+    }
+
+    void heapify(size_t n){ //just one function for both purposes
+        auto l = left(n);
+        auto r = right(n);
+        auto smallestOrLargest = n;
+        
+        if( l <= size() && compareFn_( m_heap[l] , m_heap[n] ) ){
+            smallestOrLargest = l;
+        }
+        if( r <= size() && compareFn_(m_heap[r],m_heap[smallestOrLargest]) ){
+            smallestOrLargest = r;
+        }
+        if(smallestOrLargest != n){
+            swap(m_heap[n], m_heap[smallestOrLargest]);
+            heapify(smallestOrLargest);
+        }        
+    }
+
+    void sort(){
+        for(size_t i = size()/2;i >= 1;i--){
+            heapify(i);
+        }
     }
 
     Node pop(){
@@ -64,7 +88,8 @@ public:
         Node ans = m_heap[1];
         swap(m_heap[1], m_heap[m_heap.size()-1]);
         m_heap.pop_back();
-        heapifyDesc();
+        heapify(1);
+        return ans;
     }
 
     void print        (ostream &os){
@@ -74,12 +99,8 @@ public:
         is >> m_heap;
     }
 
-    size_t size()
-    {  return m_heap.size();    }
-
-    // TODO : agregar el operator value_type &
-    value_type &operator[](size_t pos)
-    {   return m_heap[pos].getDataRef();    }
+    value_type operator[](size_t pos)
+    {   return m_heap[pos];    }
 
 };
 

@@ -84,14 +84,17 @@ public:
         m_pVect[m_vcount++] = Node(key, value);
         // cout << "Key=" << key << " Value=" << value << "\tinserted, m_vcount=" << m_vcount << " m_vmax=" << m_vmax << endl;
     }
-    // TODO: remove the last element and returns it
-    Node back(){
 
+    // TODO: returns element as value
+    Node back(){
+        return m_pVect[m_vcount - 1];
     }
+
     // TODO: remove the last element only
     void pop_back(){
-
+        m_vcount = m_vcount - 1; //I got a question in here!
     }
+
     void resize       ();
     void destroy(){
         delete [] m_pVect;
@@ -104,7 +107,7 @@ public:
         // os << "Printing: " << m_name << endl;
         os << m_vcount << " " << m_vmax << endl;
         // sort(m_pVect, m_pVect+m_vcount, CompareFn() );
-        for(size_t i = 0; i < m_vcount ; ++i )
+        for(size_t i = 1; i < m_vcount ; ++i )
             os << m_pVect[i].getData() << "\t: " << m_pVect[i].getValue() << endl;
         //os << "m_vcount=" << m_vcount << " m_vmax=" << m_vmax << endl;
     }
@@ -124,8 +127,9 @@ public:
 
     size_t size()
     {  return m_vcount;    }
-    value_type &operator[](size_t pos)
-    {   return m_pVect[pos].getDataRef();    }
+
+    Node &operator[](size_t pos)
+    {   return m_pVect[pos];    }
 
     iterator begin() { iterator iter(this, m_pVect);    return iter;    }
     iterator end()   { iterator iter(this, m_pVect+m_vcount);    return iter;    }
