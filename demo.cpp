@@ -6,6 +6,7 @@
 #include "array.h"
 #include "matrix.h"
 #include "foreach.h"
+#include "linkedlist.h"
 using namespace std;
 
 template <typename T, int N>
@@ -185,7 +186,7 @@ void DemoArray(){
     of << v2 << endl; 
     cout << "DemoArray finished !" << endl;
 
-    using TraitStringString = ArrayTrait<string, string  , std::less<NodeArray<string, string> &>>;
+    using TraitStringString = XTrait<string, string  , std::less<KeyNode<string, string> &>>;
     CArray< TraitStringString > vx("Ernesto Cuadros");
     vx.insert("Ernesto", "Cuadros");
     vx.insert("Luis"   , "Tejada");
@@ -258,35 +259,53 @@ void DemoHash()
     cout << "Hello from DemoHash()" <<endl;
 }
 
-// template <typename Container>
-// void demoLinkedList(Container &mylist)
-// {
-//     cout << "Inserting:       ";
-//     for(auto x=0; x<nElem; x++)
-//     {   
-//       cout << vect[x] << ", "; 
-//       mylist.insert(vect[x]);
-//     }
-//     cout << endl;
-//     cout << "Lista en orden: ";
-//     //for(size_t pos = 0; pos < mylist.size(); pos++)
-//     //    cout << mylist[pos] << endl;
-//     using T = typename Container::value_type;
-//     foreach(mylist, fx<T>);  cout << endl;
+// template <typename Node> //here it doesn't work but in linked does
+// void fx(Node &node){
+//     cout<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
 // }
 
-// void demoLinkedListSorted()
-// {
-//     cout << "Ascending list" << endl;
-//     LinkedList< LLTraitAsc<TX> > myAscList;
-//     demoLinkedList(myAscList);
-//     foreach(myAscList);
+template <typename Container>
+void demoLinkedList(Container &mylist){
+    
+    size_t n = 10;
+    TX keys[10] = {5,24,1,2,5,0,14,18,25,22};
+    INT linkedValues[10] = {-5,-24,-1,-2,-5,-0,-14,-18,-25,-22};
 
-//     cout << "Descending list" << endl;
-//     LinkedList< LLTraitDesc<TX> > myDescList;
-//     demoLinkedList(myDescList);
-//     foreach(myDescList);
-// }
+    cout << "Inserting:       ";
+    for(auto x=0; x<n; x++)
+    {   
+      cout<<"{"<<keys[x]<<":"<<linkedValues[x]<<"}"<< ", "; 
+      mylist.insert(keys[x],linkedValues[x]);
+    }
+    cout << endl;
+    cout << "Lista en orden: ";
+    //for(size_t pos = 0; pos < mylist.size(); pos++)
+    //    cout << mylist[pos] << endl;
+    foreach(mylist, printLine<NodeLinkedList< TX,INT >>);  cout << endl;
+    cout<<"-------------Reading from test.txt-------------"<<endl;
+    ifstream test("test.txt");
+    test>>mylist;
+    cout<<"Printing using << : "<<mylist<<endl;
+}
+
+void demoLinkedListSorted()
+{
+
+    using traitAsc = LLTrait< TX,INT, std::less< NodeLinkedList< TX,INT > > >;
+    using traitDesc = LLTrait< TX,INT, std::greater< NodeLinkedList< TX,INT > > >;
+
+    cout << "-----------------------------------Ascending list------------------------------------" << endl;
+    LinkedList< traitAsc > myAscList;
+    demoLinkedList(myAscList);
+    //foreach(myAscList);
+
+    cout<<endl<<endl;
+
+    cout << "-----------------------------------Descending list------------------------------------" << endl;
+    LinkedList< traitDesc > myDescList;
+    demoLinkedList(myDescList);
+    //foreach(myDescList);
+}
 
 // template <typename Container>
 // void demoDoubleLinkedList(Container &mylist)

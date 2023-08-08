@@ -5,6 +5,7 @@
 #include <cassert>
 #include "iterator.h"
 #include "types.h"
+#include <bits/stdc++.h>
 using namespace std;
 
 template <typename Node, typename MemberType>
@@ -15,76 +16,121 @@ void CreateBridge(Node *&rParent, Node *pNew, MemberType _pMember)
     rParent = pNew; 
 }
 
-template <typename T>
-class NodeLinkedList
-{
-public:
-  typedef T         Type;
-private:
-  typedef NodeLinkedList<T> Node;
-  public:
-  // TODO change T y KeyNode
-    T       m_data;
-    Node   *m_pNext;//
-  public:
-    NodeLinkedList(T data, Node *pNext = nullptr) 
-        : m_data(data), m_pNext(pNext)
-    {};
-    // TODO Move to KeyNode
-    T         getData()                {   return m_data;    }
-    T        &getDataRef()             {   return m_data;    }
+template <typename K, typename V>
+class NodeLinkedList{
 
-    void      setpNext(NodeLinkedList *pNext)  {   m_pNext = pNext;  }
-    Node     *getpNext()               {   return getpNextRef();   }
-    Node    *&getpNextRef()            {   return m_pNext;   }
+  public:
+    using Type = K;
+    using value_type   = K;
+    using LinkedValueType = V;
+  private:
+    using Node = NodeLinkedList<K,V>; //myself
+    public:
+    // TODO change T y KeyNode
+      KeyNode<K,V>       m_keyNode;
+      Node   *m_pNext;//
+    public:
+
+      NodeLinkedList(value_type key, Node *pNext = nullptr){//e
+        float a = 1.1;
+        m_keyNode = KeyNode(key, a);
+        m_pNext = pNext;
+      }
+      NodeLinkedList(value_type key, LinkedValueType value, Node *pNext = nullptr){
+        m_keyNode = KeyNode(key, value);
+        m_pNext = pNext;
+      }
+      
+      value_type         getData()     const      {   return m_keyNode.getData();    }
+      value_type        &getDataRef()             {   return m_keyNode.getDataRef();    }
+      LinkedValueType    getValue()   const       {   return m_keyNode.getValue();    }
+      LinkedValueType    &getValueRef()           {   return m_keyNode.getValueRef();    }
+
+      void      setpNext(NodeLinkedList *pNext)  {   m_pNext = pNext;  }
+      Node     *getpNext()               {   return getpNextRef();   }
+      Node    *&getpNextRef()            {   return m_pNext;   }
+
+      bool operator<(const Node& other) const { 
+        return m_keyNode.getData() < other.m_keyNode.getData();
+      }
+      // Error was here. Next line was missing
+      bool operator>(const Node& other) const { 
+          return m_keyNode.getData() > other.m_keyNode.getData();
+      }
+
 };
 
 // TODO remove general_iterator
 template <typename Container>
-class forward_iterator : public general_iterator<Container,  class forward_iterator<Container> > // 
-{public: 
-    // TODO: subir al padre  
-    typedef class general_iterator<Container, forward_iterator<Container> > Parent; 
-    typedef typename Container::Node                                  Node; // 
-    typedef forward_iterator<Container>                                     myself;
+class linkedlist_forward_iterator{
+    
+    public: 
+        typedef typename Container::Node           Node; //
+        typedef typename Node::Type         Type;
+        typedef linkedlist_forward_iterator<Container>  myself;
+
+    private:
+
+        Container *m_pContainer;
+        Node      *m_pNode;
 
   public:
-    forward_iterator(Container *pContainer, Node *pNode) : Parent (pContainer,pNode) {}
-    forward_iterator(myself &other)  : Parent (other) {}
-    forward_iterator(myself &&other) : Parent(other) {} // Move constructor C++11 en adelante
 
-public:
-    forward_iterator operator++() { Parent::m_pNode = (Node *)Parent::m_pNode->getpNext();  
-                                    return *this;
-                                  }
+    linkedlist_forward_iterator(Container *pContainer, Node *pNode)
+        : m_pContainer(pContainer), m_pNode(pNode) {}
+    linkedlist_forward_iterator(myself &other) 
+          : m_pContainer(other.m_pContainer), m_pNode(other.m_pNode){}
+    linkedlist_forward_iterator(myself &&other) // Move constructor
+          {   m_pContainer = move(other.m_pContainer);
+              m_pNode      = move(other.m_pNode);
+          }
+    myself operator=(myself &iter)
+          {   m_pContainer = move(iter.m_pContainer);
+              m_pNode      = move(iter.m_pNode);
+              return *(myself *)this; // Pending static_cast?
+          }
+
+    public:
+
+        bool operator==(myself iter)   { return m_pNode == iter.m_pNode; }
+        bool operator!=(myself iter)   { return !(*this == iter);        }
+
+
+        //Type &operator*()                    { return m_pNode->getDataRef();   }
+        Node &operator*(){
+          return *m_pNode;
+        }
+
+        myself operator++() {
+            m_pNode = (Node *)m_pNode->getpNext();  
+            return *this;
+        }
+
 };
 
-template <typename _T>
-struct LLTraitAsc
-{
-    using  T         = _T;
-    using  Node      = NodeLinkedList<T>;
-    using  CompareFn = less<T>;
-};
 
-template <typename _T>
-struct LLTraitDesc
+template <typename _K,
+          typename _V,
+          typename _CompareFn = std::less< NodeLinkedList<_K, _V> & >>
+struct LLTrait
 {
-    using  T         = _T;
-    using  Node      = NodeLinkedList<T>;
-    using  CompareFn = greater<T>;
+    using  value_type      = _K;
+    using  LinkedValueType = _V;
+    using  Node      = NodeLinkedList<_K,_V>;
+    using  CompareFn = _CompareFn;
 };
 
 template <typename Traits>
 class LinkedList
 {
   public:
-    typedef typename Traits::T          value_type;
+    typedef typename Traits::value_type value_type;
+    typedef typename Traits::LinkedValueType LinkedValueType;
     typedef typename Traits::Node       Node;
     
     typedef typename Traits::CompareFn  CompareFn;
     typedef LinkedList<Traits>          myself;
-    typedef forward_iterator<myself>    iterator;
+    typedef linkedlist_forward_iterator<myself>    iterator;
     
   protected:
     Node    *m_pHead = nullptr, 
@@ -98,7 +144,7 @@ class LinkedList
   public:
     LinkedList() {}
     // TODO add LinkedValueType value
-    void    insert(value_type &elem) { insert_forward(elem);  }
+    void    insert(value_type &key, LinkedValueType value) { insert_forward(key,value);  }
     value_type &operator[](size_t pos)
     {
       assert(pos <= size());
@@ -132,19 +178,23 @@ class LinkedList
   protected:
     Node **findPrev(value_type &elem) {   return findPrev(m_pHead, elem);   }
     Node **findPrev(Node *&rpPrev, value_type &elem)
-    {   
+    {
       if(!rpPrev || Compfn(elem, rpPrev->getData()) )
         return &rpPrev; // Retorna la direccion del puntero que me apunta
       return findPrev((Node *&)rpPrev->getpNextRef(), elem);
     }
-    Node *CreateNode(value_type &data, Node *pNext=nullptr){ return new Node(data, pNext); }
-    Node **insert_forward(value_type &elem)
+
+    Node *CreateNode(value_type &key, LinkedValueType value, Node *pNext=nullptr){
+      return new Node(key,value,pNext);
+    }
+    Node **insert_forward(value_type &key, LinkedValueType value)
     {
-        Node **pParent = findPrev(elem);
-        Node *pNew = CreateNode(elem);
+        Node **pParent = findPrev(key);
+        Node *pNew = CreateNode(key,value);
         ::CreateBridge(*pParent, pNew, &Node::m_pNext);
         if( !pNew->getpNext() )
           m_pTail = pNew;
+        m_size++;
         return pParent;
     }
   public:
@@ -162,11 +212,58 @@ class LinkedList
         }
         throw "hola excepcion"; // Create custom exception pending
     }
+
     // TODO add print
+    void print(ostream &os){
+      foreach(begin(),end(), printLine<Node>);
+    }
+
+    void reset(){
+      while(m_pHead){
+        PopHead();
+      }
+    }
+    
+    void read(istream &is){
+      
+      reset();
+
+      size_t file_size;
+      value_type key;
+      LinkedValueType value;
+      is>>file_size;
+
+      string abc;
+      getline(is, abc); //to avoid 20
+      
+      while(getline(is, abc) && m_size != file_size){ //keeping in mind the file_size
+        
+        stringstream ss(abc);
+        string word;
+
+        ss >> key;
+        ss >> word;
+        ss >> value;
+        insert_forward(key,value);
+      }
+    }
+
+
+
 };
 
 // TODO add operator<<
+template <typename T>
+ostream &operator<<(ostream &os, LinkedList<T> &obj){
+    obj.print(os);
+    return os;
+}
 
 // TODO add operator>>
+template <typename T>
+istream & operator>>(istream &is, LinkedList<T> &obj){
+    obj.read(is);
+    return is;
+}
 
 #endif

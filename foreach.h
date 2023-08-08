@@ -11,6 +11,11 @@ template <typename T>
 void f1(T &x)
 {  x+= 5; }
 
+template <typename Node> //here it works but in demo doesn't
+void printLine(Node &node){
+    cout<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
+}
+
 template <typename Iterator, typename F>
 void foreach(Iterator ItBegin, Iterator ItEnd, F ope)
 {

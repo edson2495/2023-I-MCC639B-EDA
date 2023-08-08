@@ -16,7 +16,8 @@ int main()
     // DemoReverseIterators();
     // DemoDynamicMatrixes();
 
-    DemoHeap();
+    //DemoHeap();
+    demoLinkedListSorted();
     // DemoBinaryTree();
     // DemoHash();
 
