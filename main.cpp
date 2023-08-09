@@ -18,6 +18,7 @@ int main()
 
     //DemoHeap();
     demoLinkedListSorted();
+    demoDoubleLinkedListSorted();
     // DemoBinaryTree();
     // DemoHash();
 

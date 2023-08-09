@@ -8,43 +8,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-template <typename Node, typename MemberType>
-void CreateBridge(Node *&rParent, Node *pNew, MemberType _pMember)
-{
-    Node *Node::*pMember = (Node *Node::*)_pMember;
-    pNew->*pMember = rParent;
-    rParent = pNew; 
-}
-
-template <typename K, typename V>
-class NodeLinkedList : public KeyNode<K,V>{
-
-  public:
-    using Type = K;
-    using value_type   = K;
-    using LinkedValueType = V;
-    using Parent = class KeyNode<K,V>;
-  private:
-    using Node = NodeLinkedList<K,V>; //myself
-  public:
-      Node   *m_pNext;//
-  public:
-
-    NodeLinkedList(value_type key, Node *pNext = nullptr){//er
-      Parent::m_key = key;
-      m_pNext = pNext;
-    }
-    
-    NodeLinkedList(value_type key, LinkedValueType value, Node *pNext = nullptr) : Parent(key,value){
-      m_pNext = pNext;
-    }
-
-    void      setpNext(NodeLinkedList *pNext)  {   m_pNext = pNext;  }
-    Node     *getpNext()               {   return getpNextRef();   }
-    Node    *&getpNextRef()            {   return m_pNext;   }
-
-};
-
 // TODO remove general_iterator
 template <typename Container>
 class linkedlist_forward_iterator{
@@ -93,6 +56,42 @@ class linkedlist_forward_iterator{
 
 };
 
+template <typename Node, typename MemberType>
+void CreateBridge(Node *&rParent, Node *pNew, MemberType _pMember)
+{
+    Node *Node::*pMember = (Node *Node::*)_pMember;
+    pNew->*pMember = rParent;
+    rParent = pNew; 
+}
+
+template <typename K, typename V>
+class NodeLinkedList : public KeyNode<K,V>{
+
+  public:
+    using Type = K;
+    using value_type   = K;
+    using LinkedValueType = V;
+    using Parent = class KeyNode<K,V>;
+  private:
+    using Node = NodeLinkedList<K,V>; //myself
+  public:
+      Node   *m_pNext;//
+  public:
+
+    NodeLinkedList(value_type key, Node *pNext = nullptr){// θɪŋk ðɪs ɪz juːst baɪ kəmˈper
+      Parent::m_key = key;
+      m_pNext = pNext;
+    }
+    
+    NodeLinkedList(value_type key, LinkedValueType value, Node *pNext = nullptr) : Parent(key,value){
+      m_pNext = pNext;
+    }
+
+    void      setpNext(Node *pNext)  {   m_pNext = pNext;  }
+    Node     *getpNext()               {   return getpNextRef();   }
+    Node    *&getpNextRef()            {   return m_pNext;   }
+
+};
 
 template <typename _K,
           typename _V,

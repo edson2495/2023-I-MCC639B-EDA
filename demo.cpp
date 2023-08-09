@@ -7,6 +7,8 @@
 #include "matrix.h"
 #include "foreach.h"
 #include "linkedlist.h"
+#include "doublelinkedlist.h"
+//#include "doublelinkedlist_with_inheritance.h"
 using namespace std;
 
 template <typename T, int N>
@@ -264,13 +266,16 @@ void DemoHash()
 //     cout<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
 // }
 
+size_t n = 10;
+TX keys[10] = {5,24,1,2,5,0,14,18,25,22};
+INT linkedValues[10] = {-5,-24,-1,-2,-5,-0,-14,-18,-25,-22};
+
 template <typename Container>
 void demoLinkedList(Container &mylist){
-    
-    size_t n = 10;
-    TX keys[10] = {5,24,1,2,5,0,14,18,25,22};
-    INT linkedValues[10] = {-5,-24,-1,-2,-5,-0,-14,-18,-25,-22};
 
+    using traitAsc = LLTrait< TX,INT, std::less< NodeLinkedList< TX,INT > > >;
+    using traitDesc = LLTrait< TX,INT, std::greater< NodeLinkedList< TX,INT > > >;
+    
     cout << "Inserting:       ";
     for(auto x=0; x<n; x++)
     {   
@@ -290,52 +295,67 @@ void demoLinkedList(Container &mylist){
 
 void demoLinkedListSorted()
 {
+    cout << "-----------------------------------demoLinkedListSorted------------------------------------" << endl;
 
     using traitAsc = LLTrait< TX,INT, std::less< NodeLinkedList< TX,INT > > >;
     using traitDesc = LLTrait< TX,INT, std::greater< NodeLinkedList< TX,INT > > >;
 
-    cout << "-----------------------------------Ascending list------------------------------------" << endl;
+    cout << "---------------------Ascending list------------------" << endl;
     LinkedList< traitAsc > myAscList;
     demoLinkedList(myAscList);
     //foreach(myAscList);
 
     cout<<endl<<endl;
 
-    cout << "-----------------------------------Descending list------------------------------------" << endl;
+    cout << "--------------------Descending list-------------------" << endl;
     LinkedList< traitDesc > myDescList;
     demoLinkedList(myDescList);
     //foreach(myDescList);
+    cout<<endl<<endl<<endl;
 }
 
-// template <typename Container>
-// void demoDoubleLinkedList(Container &mylist)
-// {
-//     cout << "Inserting:       ";
-//     for(auto x=0; x<nElem; x++)
-//     {   
-//       cout << vect[x] << ", "; 
-//       mylist.insert(vect[x]);
-//       //mylist.push_back(vect[x]);
-//     }
-//     cout << endl;
-//     cout << "Lista en orden : ";
-//     using T = typename Container::value_type;
-//     foreach(mylist, fx<T>);  cout << endl;
+template <typename Container>
+void demoDoubleLinkedList(Container &mylist)
+{
+    cout << "Inserting:       ";
+    for(auto x=0; x<n; x++)
+    {   
+      cout<<"{"<<keys[x]<<":"<<linkedValues[x]<<"}"<< ", "; 
+      mylist.insert(keys[x],linkedValues[x]);
+      //mylist.push_back(vect[x]);
+    }
+    cout << endl;
+    cout << "Lista en orden : ";
+    foreach(mylist, printLine<NodeDLL< TX,INT >>);  cout << endl;
     
-//     cout << "Lista invertida: ";
-//     foreach_inverso(mylist, fx<T>);  cout << endl;
-// }
+    cout << "Lista invertida: ";
+    foreach_reverse(mylist, printLine<NodeDLL< TX,INT >>);  cout << endl;
+    cout<<"-------------Reading from test.txt-------------"<<endl;
+    ifstream test("test.txt");
+    test>>mylist;
+    cout<<"Printing using << : "<<mylist<<endl;
+}
 
-// void demoDoubleLinkedListSorted()
-// {
-//     cout << "Ascending double list" << endl;
-//     DoubleLinkedList< DLLAscTraits<TX> > myAscList;
-//     demoDoubleLinkedList(myAscList);
+void demoDoubleLinkedListSorted()
+{
 
-//     cout << "Descending double list" << endl;
-//     DoubleLinkedList< DLLDescTraits<TX> > myDescList;
-//     demoDoubleLinkedList(myDescList); 
-// }
+    cout << "-----------------------------------demoDoubleLinkedListSorted------------------------------------" << endl;
+
+    //using traitAsc = DLLTrait< TX,INT, std::less< NodeLinkedList< TX,INT > > >; // /kəz ðiːz kəmˈper NodeLinkedList ˈvæl.juːz/
+    using traitAsc = DLLTrait< TX,INT, std::less< NodeDLL< TX,INT > > >; // /kəz ðiːz kəmˈper NodeLinkedList ˈvæl.juːz/
+    using traitDesc = DLLTrait< TX,INT, std::greater< NodeDLL< TX,INT > > >;
+
+    cout << "---------------------Ascending double list------------------" << endl;
+    DoubleLinkedList< traitAsc > myAscList;
+    demoDoubleLinkedList(myAscList);
+
+    cout<<endl<<endl;
+
+    cout << "---------------------Descending double list------------------" << endl;
+    DoubleLinkedList< traitDesc > myDescList;
+    demoDoubleLinkedList(myDescList);
+    cout<<endl<<endl<<endl;
+}
 
 // template <typename Container>
 // void DemoBinaryTree(Container &container)
