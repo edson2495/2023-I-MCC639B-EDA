@@ -17,46 +17,31 @@ void CreateBridge(Node *&rParent, Node *pNew, MemberType _pMember)
 }
 
 template <typename K, typename V>
-class NodeLinkedList{
+class NodeLinkedList : public KeyNode<K,V>{
 
   public:
     using Type = K;
     using value_type   = K;
     using LinkedValueType = V;
+    using Parent = class KeyNode<K,V>;
   private:
     using Node = NodeLinkedList<K,V>; //myself
-    public:
-    // TODO change T y KeyNode
-      KeyNode<K,V>       m_keyNode;
+  public:
       Node   *m_pNext;//
-    public:
+  public:
 
-      NodeLinkedList(value_type key, Node *pNext = nullptr){//e
-        float a = 1.1;
-        m_keyNode = KeyNode(key, a);
-        m_pNext = pNext;
-      }
-      NodeLinkedList(value_type key, LinkedValueType value, Node *pNext = nullptr){
-        m_keyNode = KeyNode(key, value);
-        m_pNext = pNext;
-      }
-      
-      value_type         getData()     const      {   return m_keyNode.getData();    }
-      value_type        &getDataRef()             {   return m_keyNode.getDataRef();    }
-      LinkedValueType    getValue()   const       {   return m_keyNode.getValue();    }
-      LinkedValueType    &getValueRef()           {   return m_keyNode.getValueRef();    }
+    NodeLinkedList(value_type key, Node *pNext = nullptr){//er
+      Parent::m_key = key;
+      m_pNext = pNext;
+    }
+    
+    NodeLinkedList(value_type key, LinkedValueType value, Node *pNext = nullptr) : Parent(key,value){
+      m_pNext = pNext;
+    }
 
-      void      setpNext(NodeLinkedList *pNext)  {   m_pNext = pNext;  }
-      Node     *getpNext()               {   return getpNextRef();   }
-      Node    *&getpNextRef()            {   return m_pNext;   }
-
-      bool operator<(const Node& other) const { 
-        return m_keyNode.getData() < other.m_keyNode.getData();
-      }
-      // Error was here. Next line was missing
-      bool operator>(const Node& other) const { 
-          return m_keyNode.getData() > other.m_keyNode.getData();
-      }
+    void      setpNext(NodeLinkedList *pNext)  {   m_pNext = pNext;  }
+    Node     *getpNext()               {   return getpNextRef();   }
+    Node    *&getpNextRef()            {   return m_pNext;   }
 
 };
 
@@ -64,15 +49,15 @@ class NodeLinkedList{
 template <typename Container>
 class linkedlist_forward_iterator{
     
-    public: 
-        typedef typename Container::Node           Node; //
-        typedef typename Node::Type         Type;
-        typedef linkedlist_forward_iterator<Container>  myself;
+  public: 
+    typedef typename Container::Node           Node; //
+    typedef typename Node::Type         Type;
+    typedef linkedlist_forward_iterator<Container>  myself;
 
-    private:
+  private:
 
-        Container *m_pContainer;
-        Node      *m_pNode;
+    Container *m_pContainer;
+    Node      *m_pNode;
 
   public:
 
@@ -90,21 +75,21 @@ class linkedlist_forward_iterator{
               return *(myself *)this; // Pending static_cast?
           }
 
-    public:
+  public:
 
-        bool operator==(myself iter)   { return m_pNode == iter.m_pNode; }
-        bool operator!=(myself iter)   { return !(*this == iter);        }
+    bool operator==(myself iter)   { return m_pNode == iter.m_pNode; }
+    bool operator!=(myself iter)   { return !(*this == iter);        }
 
 
-        //Type &operator*()                    { return m_pNode->getDataRef();   }
-        Node &operator*(){
-          return *m_pNode;
-        }
+    //Type &operator*()                    { return m_pNode->getDataRef();   }
+    Node &operator*(){
+      return *m_pNode;
+    }
 
-        myself operator++() {
-            m_pNode = (Node *)m_pNode->getpNext();  
-            return *this;
-        }
+    myself operator++() {
+        m_pNode = (Node *)m_pNode->getpNext();  
+        return *this;
+    }
 
 };
 
