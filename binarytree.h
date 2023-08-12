@@ -142,28 +142,28 @@ public:
 
 protected:
     void inorder(Node  *pNode, ostream &os){
-        foreach(inbegin(),inend(), printLine<NodeBinaryTree< INT,INT >>, os);
-        foreach(inbegin(1),inend(1), cleanPrint<NodeBinaryTree< INT,INT >>);
+        foreach(inbegin(),inend(), printLine<Node>, os);
+        foreach(inbegin(1),inend(1), cleanPrint<Node>);
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
     void postorder(Node  *pNode, ostream &os){
-        foreach(postbegin(),postend(), printLine<NodeBinaryTree< INT,INT >>,os);
-        foreach(inbegin(1),inend(1), cleanPrint<NodeBinaryTree< INT,INT >>);
+        foreach(postbegin(),postend(), printLine<Node>,os);
+        foreach(inbegin(1),inend(1), cleanPrint<Node>);
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
     void preorder(Node  *pNode, ostream &os){
-        foreach(prebegin(),preend(), printLine<NodeBinaryTree< INT,INT >>,os);
-        foreach(inbegin(1),inend(1), cleanPrint<NodeBinaryTree< INT,INT >>);
+        foreach(prebegin(),preend(), printLine<Node>,os);
+        foreach(inbegin(1),inend(1), cleanPrint<Node>);
     }
     
     // TODO: generalize this function by using iterators and apply any function
     void print(Node  *pNode, ostream &os){
-        foreach(printbegin(),printend(), printAsTree<NodeBinaryTree< INT,INT >>, os);
-        foreach(inbegin(1),inend(1), cleanPrint<NodeBinaryTree< INT,INT >>);
+        foreach(printbegin(),printend(), printAsTree<Node>, os);
+        foreach(inbegin(1),inend(1), cleanPrint<Node>);
     }
 
     // TODO: generalize this function by using iterators and apply any function
