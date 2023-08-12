@@ -180,7 +180,9 @@ class DoubleLinkedList{
     
     // TODO add print
     void print(ostream &os){
-      foreach(begin(),end(), printLine<Node>);
+      foreach(begin(),end(), [&os](Node& node){
+        os<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
+      });
     }
 
     void reset(){
