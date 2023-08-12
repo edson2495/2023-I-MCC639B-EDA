@@ -11,23 +11,6 @@ template <typename T>
 void f1(T &x)
 {  x+= 5; }
 
-template <typename Node> //here it works but in demo doesn't
-void printLine(Node &node, ostream &os){
-    node.setPrinted(1);
-    os << " --> " << node.getData()<<"("<<node.getValue()<<")";
-}
-
-template <typename Node>
-void cleanPrint(Node &node){
-    node.setPrinted(0);
-}
-
-template <typename Node> //here it works but in demo doesn't
-void printAsTree(Node &node, ostream &os){
-    node.setPrinted(1);
-    os << string(" | ") * node.getLevel() << node.getData()<<"(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<")"<<endl;
-}
-
 // template <typename Iterator, typename F>
 // void foreach(Iterator ItBegin, Iterator ItEnd, F ope){
 //     auto iter = ItBegin;

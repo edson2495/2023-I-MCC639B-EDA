@@ -22,7 +22,7 @@ public:
     using Parent = class KeyNode<K,V>;
 private:
   typedef NodeBinaryTree<K,V> Node;
-  private : bool printed = 0;
+  private : bool m_printed = 0;
   public:
     //T       m_data;
     Node *  m_pParent = nullptr;
@@ -56,8 +56,8 @@ private:
     Node    *&getChildRef(size_t branch){ return m_pChild[branch];  }
     Node    * getParent() { return m_pParent;   }
 
-    bool getPrinted(){return printed;}
-    void setPrinted(bool print){printed = print;}
+    bool getPrinted(){return m_printed;}
+    void setPrinted(bool printed){m_printed = printed;}
     size_t getLevel(){return m_level;}
 
 };
@@ -99,12 +99,12 @@ public:
 
     in_iterator inbegin(bool printed = 0) { in_iterator iter(this, leftMost(m_pRoot),printed); return iter;    }
     in_iterator inend(bool printed = 0)   { in_iterator iter(this, rightMost(m_pRoot),printed);return iter;    }
-    post_iterator postbegin() { post_iterator iter(this, leftMost(m_pRoot));    return iter;    }
-    post_iterator postend()   { post_iterator iter(this, m_pRoot);    return iter;    }
-    pre_iterator prebegin() { pre_iterator iter(this, m_pRoot);    return iter;    }
-    pre_iterator preend()   { pre_iterator iter(this, rightMost(m_pRoot));    return iter;    }
-    print_iterator printbegin() { print_iterator iter(this, rightMost(m_pRoot));    return iter;    }
-    print_iterator printend()   { print_iterator iter(this, leftMost(m_pRoot));    return iter;    }
+    post_iterator postbegin(bool printed = 0) { post_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
+    post_iterator postend(bool printed = 0)   { post_iterator iter(this, m_pRoot,printed);    return iter;    }
+    pre_iterator prebegin(bool printed = 0) { pre_iterator iter(this, m_pRoot,printed);    return iter;    }
+    pre_iterator preend(bool printed = 0)   { pre_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
+    print_iterator printbegin(bool printed = 0) { print_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
+    print_iterator printend(bool printed = 0)   { print_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
 
 protected:
     Node *CreateNode(Node *pParent, value_type &key, LinkedValueType value, size_t level){ return new Node(pParent, key, value, level); }
@@ -133,48 +133,43 @@ protected:
     }
 
 public:
-    void inorder  (ostream &os)    {   inorder  (m_pRoot, os);  }
-    void postorder(ostream &os)    {   postorder(m_pRoot, os);  }
-    void preorder (ostream &os)    {   preorder (m_pRoot, os);  }
-    void print    (ostream &os)    {   print    (m_pRoot, os);  }
-    void inorder(void (*visit) (value_type& item))
-    {   inorder(m_pRoot, visit);    }
+    void inorder  (ostream &os, void (*func) (Node& node, ostream &os))    {   inorder  (m_pRoot, os,func);  }
+    void postorder(ostream &os, void (*func) (Node& node, ostream &os))    {   postorder(m_pRoot, os,func);  }
+    void preorder (ostream &os, void (*func) (Node& node, ostream &os))    {   preorder (m_pRoot, os,func);  }
+    void print    (ostream &os, void (*func) (Node& node, ostream &os))    {   print    (m_pRoot, os,func);  }
+    void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value)
+    {   inorder(m_pRoot, func,value);    }
 
 protected:
-    void inorder(Node  *pNode, ostream &os){
-        foreach(inbegin(),inend(), printLine<Node>, os);
-        foreach(inbegin(1),inend(1), cleanPrint<Node>);
+    void inorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+        foreach(inbegin(),inend(), func, os);
+        foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void postorder(Node  *pNode, ostream &os){
-        foreach(postbegin(),postend(), printLine<Node>,os);
-        foreach(inbegin(1),inend(1), cleanPrint<Node>);
+    void postorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+        foreach(postbegin(),postend(), func,os);
+        foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void preorder(Node  *pNode, ostream &os){
-        foreach(prebegin(),preend(), printLine<Node>,os);
-        foreach(inbegin(1),inend(1), cleanPrint<Node>);
+    void preorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+        foreach(prebegin(),preend(), func,os);
+        foreach(inbegin(1),inend(1), [](Node& node){});
     }
     
     // TODO: generalize this function by using iterators and apply any function
-    void print(Node  *pNode, ostream &os){
-        foreach(printbegin(),printend(), printAsTree<Node>, os);
-        foreach(inbegin(1),inend(1), cleanPrint<Node>);
+    void print(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+        foreach(printbegin(),printend(), func, os);
+        foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
-    void inorder(Node  *pNode, void (*visit) (value_type& item)) //don't understand this function
-    {
-        if( pNode )
-        {   
-            inorder(pNode->getChild(0), *visit);
-            (*visit)(pNode->getDataRef());
-            inorder(pNode->getChild(1), *visit);
-        }
+    void inorder(Node  *pNode, void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
+        foreach(inbegin(),inend(), func, value);
+        foreach(inbegin(1),inend(1), [](Node& node){});
     }
 };
 
