@@ -133,41 +133,33 @@ protected:
     }
 
 public:
-    void inorder  (ostream &os, void (*func) (Node& node, ostream &os))    {   inorder  (m_pRoot, os,func);  }
-    void postorder(ostream &os, void (*func) (Node& node, ostream &os))    {   postorder(m_pRoot, os,func);  }
-    void preorder (ostream &os, void (*func) (Node& node, ostream &os))    {   preorder (m_pRoot, os,func);  }
-    void print    (ostream &os, void (*func) (Node& node, ostream &os))    {   print    (m_pRoot, os,func);  }
-    void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value)
-    {   inorder(m_pRoot, func,value);    }
-
-protected:
-    void inorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+    void inorder(ostream &os, void (*func) (Node& node, ostream &os)){
         foreach(inbegin(),inend(), func, os);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void postorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+    void postorder(ostream &os, void (*func) (Node& node, ostream &os)){
         foreach(postbegin(),postend(), func,os);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void preorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+    void preorder(ostream &os, void (*func) (Node& node, ostream &os)){
         foreach(prebegin(),preend(), func,os);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
     
     // TODO: generalize this function by using iterators and apply any function
-    void print(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
+    void print(ostream &os, void (*func) (Node& node, ostream &os)){
         foreach(printbegin(),printend(), func, os);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
-    void inorder(Node  *pNode, void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
+    void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
         foreach(inbegin(),inend(), func, value);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
