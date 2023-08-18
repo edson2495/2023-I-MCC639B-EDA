@@ -17,7 +17,8 @@ int main()
     // DemoDynamicMatrixes();
 
     //DemoHeap();
-    DemoBinaryTree();
+    //DemoBinaryTree();
+    DemoAVLTree();
     // DemoHash();
 
     // DemoPreandPostIncrement();

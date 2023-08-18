@@ -28,6 +28,7 @@ private:
     Node *  m_pParent = nullptr;
     vector<Node *> m_pChild = {nullptr, nullptr}; // 2 hijos inicializados en nullptr
     size_t m_level;
+    size_t m_height;
   public:
 
     NodeBinaryTree(value_type key, // θɪŋk ðɪs ɪz juːst baɪ kəmˈper
@@ -43,22 +44,29 @@ private:
                    value_type key,
                    LinkedValueType value,
                    size_t level,
+                   size_t height = 1,
                    Node *p0 = nullptr,
                    Node *p1 = nullptr) 
         : m_pParent(pParent), Parent(key,value){
         m_level = level;
+        m_height = height;
         m_pChild[0] = p0;
         m_pChild[1] = p1;
     }
  
-    void      setpChild(const Node *pChild, size_t pos)  {   m_pChild[pos] = pChild;  }
+    //void      setpChild(const Node *pChild, size_t pos)  {   m_pChild[pos] = pChild;  }
+    void      setpChild(Node *pChild, size_t pos)  {   m_pChild[pos] = pChild;  }
     Node    * getChild(size_t branch){ return m_pChild[branch];  }
     Node    *&getChildRef(size_t branch){ return m_pChild[branch];  }
     Node    * getParent() { return m_pParent;   }
 
+    void setParent(Node* pParent) { m_pParent = pParent;   }
     bool getPrinted(){return m_printed;}
     void setPrinted(bool printed){m_printed = printed;}
     size_t getLevel(){return m_level;}
+    void setLevel(size_t level){m_level = level;}
+    size_t getHeight(){return m_height;}
+    void setHeight(size_t height){m_height = height;}
 
 };
 
@@ -73,8 +81,7 @@ struct BinaryTreeTrait{
 };
 
 template <typename Traits>
-class BinaryTree
-{
+class BinaryTree{
   public:
     typedef typename Traits::value_type      value_type;
     typedef typename Traits::LinkedValueType LinkedValueType;
@@ -87,90 +94,114 @@ class BinaryTree
     typedef binary_tree_preorden_iterator<myself>    pre_iterator; //preorden iterator
     typedef binary_tree_print_iterator<myself>    print_iterator; //print as tree iterator
 
-protected:
-    Node    *m_pRoot = nullptr;
-    size_t   m_size  = 0;
-    CompareFn Compfn;
-public: 
-    size_t  size()  const       { return m_size;       }
-    bool    empty() const       { return size() == 0;  }
-    // TODO: insert must receive two paramaters: elem and LinkedValueType value
-    void    insert(value_type &key, LinkedValueType value) { internal_insert(key, value, nullptr, m_pRoot,0);  }
+    protected:
+        Node    *m_pRoot = nullptr;
+        size_t   m_size  = 0;
+        CompareFn Compfn;
+    public: 
+        size_t  size()  const       { return m_size;       }
+        bool    empty() const       { return size() == 0;  }
+        // TODO: insert must receive two paramaters: elem and LinkedValueType value
+        virtual void insert(value_type &key, LinkedValueType value) { internal_insert(key, value, nullptr, m_pRoot,0);  }
 
-    in_iterator inbegin(bool printed = 0) { in_iterator iter(this, leftMost(m_pRoot),printed); return iter;    }
-    in_iterator inend(bool printed = 0)   { in_iterator iter(this, rightMost(m_pRoot),printed);return iter;    }
-    post_iterator postbegin(bool printed = 0) { post_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
-    post_iterator postend(bool printed = 0)   { post_iterator iter(this, m_pRoot,printed);    return iter;    }
-    pre_iterator prebegin(bool printed = 0) { pre_iterator iter(this, m_pRoot,printed);    return iter;    }
-    pre_iterator preend(bool printed = 0)   { pre_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
-    print_iterator printbegin(bool printed = 0) { print_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
-    print_iterator printend(bool printed = 0)   { print_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
+        in_iterator inbegin(bool printed = 0) { in_iterator iter(this, leftMost(m_pRoot),printed); return iter;    }
+        in_iterator inend(bool printed = 0)   { in_iterator iter(this, rightMost(m_pRoot),printed);return iter;    }
+        post_iterator postbegin(bool printed = 0) { post_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
+        post_iterator postend(bool printed = 0)   { post_iterator iter(this, m_pRoot,printed);    return iter;    }
+        pre_iterator prebegin(bool printed = 0) { pre_iterator iter(this, m_pRoot,printed);    return iter;    }
+        pre_iterator preend(bool printed = 0)   { pre_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
+        print_iterator printbegin(bool printed = 0) { print_iterator iter(this, rightMost(m_pRoot),printed);    return iter;    }
+        print_iterator printend(bool printed = 0)   { print_iterator iter(this, leftMost(m_pRoot),printed);    return iter;    }
 
-protected:
-    Node *CreateNode(Node *pParent, value_type &key, LinkedValueType value, size_t level){ return new Node(pParent, key, value, level); }
-    Node *internal_insert(value_type &key, LinkedValueType value, Node *pParent, Node *&rpOrigin, size_t level)
-    {
-        if( !rpOrigin ) //  llegué al fondo de una rama
-        {   ++m_size;
-            return (rpOrigin = CreateNode(pParent, key, value,level));
+    protected:
+        Node *CreateNode(Node *pParent, value_type &key, LinkedValueType value, size_t level){ return new Node(pParent, key, value, level); }
+        Node *internal_insert(value_type &key, LinkedValueType value, Node *pParent, Node *&rpOrigin, size_t level)
+        {
+            if( !rpOrigin ) //  llegué al fondo de una rama
+            {   ++m_size;
+                return (rpOrigin = CreateNode(pParent, key, value, level));
+            }
+            size_t branch = Compfn(key, rpOrigin->getDataRef() );
+            return internal_insert(key, value, rpOrigin, rpOrigin->getChildRef(branch), level+1);
         }
-        size_t branch = Compfn(key, rpOrigin->getDataRef() );
-        return internal_insert(key, value, rpOrigin, rpOrigin->getChildRef(branch), level+1);
-    }
 
-    Node* leftMost(Node *pNode){
-        assert(pNode != nullptr);
-        while(pNode != nullptr && pNode->getChild(0) != nullptr)
-			pNode = pNode->getChild(0);
-        return pNode;
-    }
+        Node* leftMost(Node *pNode){
+            assert(pNode != nullptr);
+            while(pNode != nullptr && pNode->getChild(0) != nullptr)
+                pNode = pNode->getChild(0);
+            return pNode;
+        }
 
-    Node* rightMost(Node *pNode){
-        assert(pNode != nullptr);
-        while(pNode != nullptr && pNode->getChild(1) != nullptr)
-			pNode = pNode->getChild(1);
-        return pNode;
-    }
+        Node* rightMost(Node *pNode){
+            assert(pNode != nullptr);
+            while(pNode != nullptr && pNode->getChild(1) != nullptr)
+                pNode = pNode->getChild(1);
+            return pNode;
+        }
 
-public:
-    void inorder  (ostream &os, void (*func) (Node& node, ostream &os))    {   inorder  (m_pRoot, os,func);  }
-    void postorder(ostream &os, void (*func) (Node& node, ostream &os))    {   postorder(m_pRoot, os,func);  }
-    void preorder (ostream &os, void (*func) (Node& node, ostream &os))    {   preorder (m_pRoot, os,func);  }
-    void print    (ostream &os, void (*func) (Node& node, ostream &os))    {   print    (m_pRoot, os,func);  }
-    void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value)
-    {   inorder(m_pRoot, func,value);    }
-
-protected:
-    void inorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(inbegin(),inend(), func, os);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
-
-    // TODO: generalize this function by using iterators and apply any function
-    // Create a new iterator to walk in postorder
-    void postorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(postbegin(),postend(), func,os);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
-
-    // TODO: generalize this function by using iterators and apply any function
-    // Create a new iterator to walk in postorder
-    void preorder(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(prebegin(),preend(), func,os);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
+    public:
     
-    // TODO: generalize this function by using iterators and apply any function
-    void print(Node  *pNode, ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(printbegin(),printend(), func, os);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
+        void inorder(ostream &os, void (*func) (Node& node, ostream &os)){
+            foreach(inbegin(),inend(), func, os);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
 
-    // TODO: generalize this function by using iterators and apply any function
-    void inorder(Node  *pNode, void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
-        foreach(inbegin(),inend(), func, value);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
+        // TODO: generalize this function by using iterators and apply any function
+        // Create a new iterator to walk in postorder
+        void postorder(ostream &os, void (*func) (Node& node, ostream &os)){
+            foreach(postbegin(),postend(), func,os);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
+
+        // TODO: generalize this function by using iterators and apply any function
+        // Create a new iterator to walk in postorder
+        void preorder(ostream &os, void (*func) (Node& node, ostream &os)){
+            foreach(prebegin(),preend(), func,os);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
+        
+        // TODO: generalize this function by using iterators and apply any function
+        void print(ostream &os, void (*func) (Node& node, ostream &os)){
+            foreach(printbegin(),printend(), func, os);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
+
+        // TODO: generalize this function by using iterators and apply any function
+        void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
+            foreach(inbegin(),inend(), func, value);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
+
+        void print(ostream &os){
+            foreach(
+                printbegin(),
+                printend(),
+                [&os](Node& node, ostream &os_){
+                    os_ << string(" | ") * node.getLevel() << node.getData()<<
+                    "(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<",h:"<<node.getHeight()<<")"<<endl;
+                },
+                os);
+            foreach(inbegin(1),inend(1), [](Node& node){});
+        }
+
+        void preorder(Node  *pNode, void (*func) (Node& Node)){
+            pre_iterator prebegin_(this, pNode,0);
+            pre_iterator preend_(this, rightMost(pNode),0);
+            foreach(prebegin_,preend_, func);
+            foreach(
+                pre_iterator(this, pNode,1),
+                pre_iterator(this, rightMost(pNode),1),
+                [](Node& node){}
+            );
+        }
 };
+
+//TODO add operator<<
+template <typename T>
+ostream &operator<<(ostream &os, BinaryTree<T> &obj){
+    using Node = typename T::Node;
+    obj.print(os);
+    return os;
+}
 
 #endif

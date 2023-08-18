@@ -7,6 +7,7 @@
 #include "matrix.h"
 #include "foreach.h"
 #include "binarytree.h"
+#include "avl.h"
 using namespace std;
 
 template <typename T, int N>
@@ -256,7 +257,8 @@ void printAsLine(Node &node, ostream &os){
 
 template <typename Node>
 void printAsTree(Node &node, ostream &os){
-    os << string(" | ") * node.getLevel() << node.getData()<<"(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<")"<<endl;
+    os << string(" | ") * node.getLevel() << node.getData()<<
+    "(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<",h:"<<node.getHeight()<<")"<<endl;
 }
 
 template <typename Container>
@@ -309,6 +311,38 @@ void DemoBinaryTree()
     BinaryTree< traitDesc > myDescBinaryTree;
     DemoBinaryTree(myDescBinaryTree);
     cout<<endl;
+}
+
+void DemoAVLTree()
+{   
+
+    cout <<endl<< "-----------------------------------DemoAVLTree------------------------------------" << endl;
+
+    using traitDesc = BinaryTreeTrait< INT,string, std::greater< NodeBinaryTree< INT,string > > >;
+
+    CAVL< traitDesc > AVLTree;
+
+    using value_type = typename traitDesc::value_type;
+    using LinkedValueType = typename traitDesc::LinkedValueType;
+    using Node = typename traitDesc::Node;
+
+    vector<value_type> keys = {50,100,150,120,130,40,30,70,60};//allrotations
+    vector<LinkedValueType> values = {"a","b","c","d","e","f","g","h","i"};
+    size_t n = keys.size();
+    for(size_t i = 0;i<n;i++){
+        AVLTree.insert(keys[i],values[i]);
+    }
+    cout << "\nTREE (p: parent, v: linked value, h: height) :" << endl;
+    AVLTree.print(cout,printAsTree<Node>);
+    cout<<endl;
+    cout<<"-------------Reading from test.txt-------------"<<endl;
+    ifstream test("test.txt");
+    using traitFloatIntDesc = BinaryTreeTrait< TX,INT, std::greater< NodeBinaryTree< TX,INT > > >;
+    CAVL< traitFloatIntDesc > AVLTree2;
+    test>>AVLTree2;
+    cout<<"Printing using << : "<<endl<<AVLTree2<<endl;
+
+
 }
 
 void DemoHash()

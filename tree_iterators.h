@@ -1,6 +1,6 @@
 #ifndef __TREE_ITERATOR_H__
 #define __TREE_ITERATOR_H__
-// #include <unistd.h>
+//#include <unistd.h>
 //usleep(microseconds);
 
 template <typename Container>
@@ -119,9 +119,9 @@ class binary_tree_postorden_iterator{
     }
 
     Node* postorden(Node* pNode, bool& r){
-        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == 0){return postorden(pNode->getChild(0),r);}
-        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == 0){return postorden(pNode->getChild(1),r);}
-        if(pNode->getPrinted() == 0){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
+        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == m_printed){return postorden(pNode->getChild(0),r);}
+        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == m_printed){return postorden(pNode->getChild(1),r);}
+        if(pNode->getPrinted() == m_printed){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
         return pNode->getParent();
     }
 
@@ -177,9 +177,9 @@ class binary_tree_preorden_iterator{
     }
 
     Node* preorden(Node* pNode, bool& r){
-        if(pNode->getPrinted() == 0){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
-        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == 0){return preorden(pNode->getChild(0),r);}
-        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == 0){return preorden(pNode->getChild(1),r);}
+        if(pNode->getPrinted() == m_printed){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
+        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == m_printed){return preorden(pNode->getChild(0),r);}
+        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == m_printed){return preorden(pNode->getChild(1),r);}
         return pNode->getParent();
     }
 
@@ -235,9 +235,9 @@ class binary_tree_print_iterator{
     }
 
     Node* printAsTree(Node* pNode, bool& r){
-        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == 0){return printAsTree(pNode->getChild(1),r);}
-        if(pNode->getPrinted() == 0){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
-        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == 0){return printAsTree(pNode->getChild(0),r);}
+        if(pNode->getChild(1) != nullptr && pNode->getChild(1)->getPrinted() == m_printed){return printAsTree(pNode->getChild(1),r);}
+        if(pNode->getPrinted() == m_printed){r = 1;pNode->setPrinted(m_printed?0:1);return pNode;}
+        if(pNode->getChild(0) != nullptr && pNode->getChild(0)->getPrinted() == m_printed){return printAsTree(pNode->getChild(0),r);}
         return pNode->getParent();
     }
 
