@@ -326,7 +326,7 @@ void DemoAVLTree()
     using LinkedValueType = typename traitDesc::LinkedValueType;
     using Node = typename traitDesc::Node;
 
-    vector<value_type> keys = {50,100,150,120,130,40,30,70,60};//allrotations
+    vector<value_type> keys = {50,100,150,120,130,40,30,70,60};//all rotations
     vector<LinkedValueType> values = {"a","b","c","d","e","f","g","h","i"};
     size_t n = keys.size();
     for(size_t i = 0;i<n;i++){
