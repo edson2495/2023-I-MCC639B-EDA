@@ -38,8 +38,7 @@ class CAVL: public BinaryTree<Traits>{
       if(ptrChild){ptrChild->setParent(ptrParent);}//in case child is null
     }
 
-  //by Edson Cáceres
-  Node* rotation(Node* pCurrentRoot, Node* pParent, string type){
+  Node* rotation(Node* pCurrentRoot, Node* pParent, string type){//by Edson Cáceres
       Node* pNewRoot = pCurrentRoot->getChild(type=="left"?1:0); //new root of the subtree
       setChild(pCurrentRoot,pNewRoot->getChild(type=="left"?0:1),type=="left"?1:0);
       setChild(pNewRoot,pCurrentRoot,type=="left"?0:1);
@@ -49,8 +48,7 @@ class CAVL: public BinaryTree<Traits>{
       return pNewRoot;
   }
 
-  //by Edson Cáceres
-  void balance(Node* pNode, Node *& pNewRoot){
+  void balance(Node* pNode, Node *& pNewRoot){ //by Edson Cáceres
     pNode->setHeight( max( height(pNode->getChild(0)) , height(pNode->getChild(1)) ) + 1 );
     int bF = balanceFactor(pNode);
     Node* pParent = pNode->getParent();
@@ -82,9 +80,8 @@ class CAVL: public BinaryTree<Traits>{
 
   public: 
 
-    //by Edson Cáceres
     // TODO: insert must receive two paramaters: elem and LinkedValueType value
-    void insert(value_type &key, LinkedValueType value){
+    void insert(value_type &key, LinkedValueType value){ //by Edson Cáceres
       Node* pInsertedNode = this->internal_insert(key, value, nullptr, this->m_pRoot,0);
       Node* pNewRoot = nullptr;
       if(pInsertedNode->getParent()){balance(pInsertedNode->getParent(),pNewRoot);}
@@ -102,12 +99,12 @@ class CAVL: public BinaryTree<Traits>{
       LinkedValueType value;
       is>>file_size;
 
-      string abc;
-      getline(is, abc); //to avoid 20
+      string line;
+      getline(is, line); //to avoid 20
       
-      while(getline(is, abc) && this->m_size != file_size){ //keeping in mind the file_size
+      while(getline(is, line) && this->m_size != file_size){ //keeping in mind the file_size
         
-        stringstream ss(abc);
+        stringstream ss(line);
         string word;
 
         ss >> key;
