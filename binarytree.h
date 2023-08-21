@@ -133,36 +133,44 @@ protected:
     }
 
 public:
-    void inorder(ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(inbegin(),inend(), func, os);
+
+    // TODO: generalize this function by using iterators and apply any function
+    // Create a new iterator to walk in inorder
+    template <typename F, typename... Args> //created by Edson Cáceres
+    void inorder(F func, Args&&... args){
+        foreach(inbegin(),inend(), func,args...);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void postorder(ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(postbegin(),postend(), func,os);
+    template <typename F, typename... Args> //created by Edson Cáceres
+    void postorder(F func, Args&&... args){
+        foreach(postbegin(),postend(), func,args...);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
     // TODO: generalize this function by using iterators and apply any function
     // Create a new iterator to walk in postorder
-    void preorder(ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(prebegin(),preend(), func,os);
+    template <typename F, typename... Args> //created by Edson Cáceres
+    void preorder(F func, Args&&... args){
+        foreach(prebegin(),preend(), func,args...);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
     
     // TODO: generalize this function by using iterators and apply any function
-    void print(ostream &os, void (*func) (Node& node, ostream &os)){
-        foreach(printbegin(),printend(), func, os);
+    template <typename F, typename... Args> //created by Edson Cáceres
+    void print(F func, Args&&... args){
+        foreach(printbegin(),printend(), func, args...);
         foreach(inbegin(1),inend(1), [](Node& node){});
     }
 
-    // TODO: generalize this function by using iterators and apply any function
-    void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){
-        foreach(inbegin(),inend(), func, value);
-        foreach(inbegin(1),inend(1), [](Node& node){});
-    }
+    //replaced by inorder with variadic inorder
+    // // TODO: generalize this function by using iterators and apply any function
+    // void inorder(void (*func) (Node& Node, LinkedValueType& value),LinkedValueType& value){ //created by Edson Cáceres
+    //     foreach(inbegin(),inend(), func, value);
+    //     foreach(inbegin(1),inend(1), [](Node& node){});
+    // }
 };
 
 #endif

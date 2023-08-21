@@ -273,21 +273,22 @@ void DemoBinaryTree(Container &container){
     }
     
     cout << "\nTREE (p: parent, v: linked value): " << endl;
-    container.print(cout,printAsTree<Node>);
+    container.print(printAsTree<Node>,cout);
     cout << endl;
     cout << "Recorrido inorden: " << endl;
-    container.inorder(cout,printAsLine<Node>);
+    //container.inorder(cout,printAsLine<Node>);
+    container.inorder(printAsLine<Node>,cout);
     cout << "\nRecorrido postorden: " << endl;
-    container.postorder(cout,printAsLine<Node>);
+    container.postorder(printAsLine<Node>,cout);
     cout << "\nRecorrido preorden: " << endl;
-    container.preorder(cout,printAsLine<Node>);
+    container.preorder(printAsLine<Node>,cout);
     cout << "\n\nVisitando la funcion en forma inorder y sumandole (1) a value: " << endl;
     LinkedValueType value = 1;
     container.inorder([](Node& node, LinkedValueType& value){
         node.getValueRef() = node.getValue() + value;
     },value);
     cout << "Recorrido preorden: " << endl;
-    container.preorder(cout,printAsLine<Node>);
+    container.preorder(printAsLine<Node>,cout);
 
     cout<<endl;
 
