@@ -195,10 +195,13 @@ class BinaryTree{
 template <typename T> //created by Edson Cáceres
 ostream &operator<<(ostream &os, BinaryTree<T> &obj){
     using Node = typename T::Node;
-    obj.print([&os](Node& node, ostream &os_){
-        os_ << string(" | ") * node.getLevel() << node.getData()<<
-        "(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<",h:"<<node.getHeight()<<")"<<endl;
-    },os);
+    obj.print(
+        [&os](Node& node, ostream &os_){
+            os_ << string(" | ") * node.getLevel() << node.getData()<<
+            "(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<",h:"<<node.getHeight()<<")"<<endl;
+        },
+        os
+    );
     return os;
 }
 
