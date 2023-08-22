@@ -86,14 +86,13 @@ class CAVL: public BinaryTree<Traits>{
       Node* pNewRoot = nullptr;
       if(pInsertedNode->getParent()){balance(pInsertedNode->getParent(),pNewRoot);}
       if(pNewRoot != nullptr){
-        this->preorder(pNewRoot,[](Node & node){
+        this->preorder2(pNewRoot,[](Node & node){
           node.setLevel( (node.getParent()?node.getParent()->getLevel():-1) + 1 );
         });
       }
     }
 
-    //by Edson Cáceres
-    void read(istream &is){
+    void read(istream &is){ //created by Edson Cáceres
       size_t file_size;
       value_type key;
       LinkedValueType value;

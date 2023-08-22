@@ -261,7 +261,7 @@ void printAsTree(Node &node, ostream &os){
     "(p:"<<(node.getParent()?to_string(node.getParent()->getData()):"Root")<<",v:"<<node.getValue()<<",h:"<<node.getHeight()<<")"<<endl;
 }
 
-template <typename Container>
+template <typename Container>  //created by Edson Cáceres
 void DemoBinaryTree(Container &container){
     
     using value_type = typename Container::value_type;
@@ -275,27 +275,28 @@ void DemoBinaryTree(Container &container){
     }
     
     cout << "\nTREE (p: parent, v: linked value): " << endl;
-    container.print(cout,printAsTree<Node>);
+    container.print(printAsTree<Node>,cout);
     cout << endl;
     cout << "Recorrido inorden: " << endl;
-    container.inorder(cout,printAsLine<Node>);
+    //container.inorder(cout,printAsLine<Node>);
+    container.inorder(printAsLine<Node>,cout);
     cout << "\nRecorrido postorden: " << endl;
-    container.postorder(cout,printAsLine<Node>);
+    container.postorder(printAsLine<Node>,cout);
     cout << "\nRecorrido preorden: " << endl;
-    container.preorder(cout,printAsLine<Node>);
+    container.preorder(printAsLine<Node>,cout);
     cout << "\n\nVisitando la funcion en forma inorder y sumandole (1) a value: " << endl;
     LinkedValueType value = 1;
     container.inorder([](Node& node, LinkedValueType& value){
         node.getValueRef() = node.getValue() + value;
     },value);
     cout << "Recorrido preorden: " << endl;
-    container.preorder(cout,printAsLine<Node>);
+    container.preorder(printAsLine<Node>,cout);
 
     cout<<endl;
 
 }
 
-void DemoBinaryTree()
+void DemoBinaryTree()  //created by Edson Cáceres
 {   
 
     cout <<endl<< "-----------------------------------DemoBinaryTree------------------------------------" << endl;
@@ -333,7 +334,7 @@ void DemoAVLTree()
         AVLTree.insert(keys[i],values[i]);
     }
     cout << "\nTREE (p: parent, v: linked value, h: height) :" << endl;
-    AVLTree.print(cout,printAsTree<Node>);
+    AVLTree.print(printAsTree<Node>,cout);
     cout<<endl;
     cout<<"-------------Reading from test.txt-------------"<<endl;
     ifstream test("test.txt");
