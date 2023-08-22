@@ -198,10 +198,9 @@ class LinkedList
     }
 
     // TODO add print
-    void print(ostream &os){
-      foreach(begin(),end(), [&os](Node& node){
-        os<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
-      });
+    template <typename F, typename... Args> //created by Edson Cáceres
+    void print(F func, Args&&... args){
+        foreach(begin(),end(), func, args...);
     }
 
     void reset(){
@@ -210,7 +209,7 @@ class LinkedList
       }
     }
     
-    void read(istream &is){
+    void read(istream &is){ //created by Edson Cáceres
       
       reset();
 
@@ -219,12 +218,12 @@ class LinkedList
       LinkedValueType value;
       is>>file_size;
 
-      string abc;
-      getline(is, abc); //to avoid 20
+      string line;
+      getline(is, line); //to avoid 20
       
-      while(getline(is, abc) && m_size != file_size){ //keeping in mind the file_size
+      while(getline(is, line) && m_size != file_size){ //keeping in mind the file_size
         
-        stringstream ss(abc);
+        stringstream ss(line);
         string word;
 
         ss >> key;
@@ -239,17 +238,23 @@ class LinkedList
 };
 
 // TODO add operator<<
-template <typename T>
+template <typename T> //created by Edson Cáceres
 ostream &operator<<(ostream &os, LinkedList<T> &obj){
-    obj.print(os);
-    return os;
+  using Node = typename T::Node;
+  obj.print(
+    [&os](Node& node, ostream &os_){
+      os_<<"{"<<node.getData()<<":"<<node.getValue()<<"}"<< ", "; 
+    },
+    os
+  );
+  return os;
 }
 
 // TODO add operator>>
 template <typename T>
 istream & operator>>(istream &is, LinkedList<T> &obj){
-    obj.read(is);
-    return is;
+  obj.read(is);
+  return is;
 }
 
 #endif
