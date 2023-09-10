@@ -17,7 +17,6 @@ void CreateBridge(Node *&rParent, Node *pNew, MemberType _pMember)
 template <typename K, typename V>
 class NodeBPlusTree : public KeyNode<K,V>{
     public:
-        //using Type = K;
         using value_type   = K;
         using LinkedValueType = V;
     
@@ -28,7 +27,7 @@ class NodeBPlusTree : public KeyNode<K,V>{
   
     public:
         
-        Node* m_pNext = nullptr;//public
+        Node* m_pNext = nullptr;//publicr
 
     public:
 
@@ -79,10 +78,6 @@ class ChildNode{
             m_pNext = pNext;
         }
 
-        ~ChildNode(){
-            cout << "\nFALTA---ChildNode Destructor executed childnode\n"; 
-        }
-
         void      setpNext(ChildNode *pNext)  {   m_pNext = pNext;  }
         ChildNode     *getpNext()               {   return getpNextRef();   }
         ChildNode    *&getpNextRef()            {   return m_pNext;   }
@@ -124,8 +119,6 @@ class BPlusPage{
 
         BPlusPage(size_t maxDegree, int type, BPlusPage* pPrev = nullptr, BPlusPage* pNext = nullptr) : m_maxDegree(maxDegree), m_type(type), m_pPrev(pPrev), m_pNext(pNext){}
 
-        ~BPlusPage() { cout << "\nFALTA---BPlusPage Destructor executed\n"; }
-
     private:
         
         Node **findPrev(Node *&rpPrev, value_type &elem, size_t &position){
@@ -149,12 +142,11 @@ class BPlusPage{
             return new Node(key,value,pNext);
         }
 
-        //Node **insert_forward(value_type &key, LinkedValueType value, size_t &position){
         Node* insert_forward(value_type &key, LinkedValueType value, size_t &position){
             Node **pParent = findPrev(key,position);
-            if(m_type == 1){ //nodo data
+            if(m_type == 1){ //nd
                 Node *pNew = CreateNode(key,value);
-                ::CreateBridge(*pParent, pNew, &Node::m_pNext);//maybe error
+                ::CreateBridge(*pParent, pNew, &Node::m_pNext);
                 if( !pNew->getpNext() )
                     m_pTail = pNew;
                 m_size++;
@@ -183,16 +175,13 @@ class BPlusPage{
         ChildNode_* getpChildHead(){return m_pChildHead;}
         void setpChildHead(ChildNode_* pChildHead){m_pChildHead = pChildHead;}
         ChildNode_* getpChildTail(){return m_pChildTail;}
-        void setpChildTail(ChildNode_* pChildTail){m_pChildTail = pChildTail;}
-        //void childSizePlus(size_t n){m_child_size+=n;}
-        
+        void setpChildTail(ChildNode_* pChildTail){m_pChildTail = pChildTail;}        
 
         void setpChildNode(size_t pos, ChildNode_* pChildNodeNew){
             ChildNode_** pChildNode = getpChildNode(pos);
             ChildNode_* pTemp = *pChildNode;
             if(pTemp == nullptr){m_child_size++;}
             *pChildNode = pChildNodeNew;
-            //pTemp->~ChildNode();
         }
 
         ChildNode_** getpChildNode(size_t pos){
@@ -200,7 +189,6 @@ class BPlusPage{
         }
 
         void pushChildNode(size_t n, ChildNode_* pNew){
-            //pNew->getpChild()->print();//borrar
             ChildNode_** pPrev = getpChildNode(n);
             ::CreateBridge(*pPrev, pNew, &ChildNode_::m_pNext);
             if( !pNew->getpNext() )
@@ -272,16 +260,13 @@ class BPlusPage{
 
         bool isBalanced(){return m_size < m_maxDegree;}
 
-        myself* insert(value_type &key, LinkedValueType value){//la insercion se hace siempre abajo, luego se verifica si se balancea
+        myself* insert(value_type &key, LinkedValueType value){
             size_t position = 0;
-            Node* pPrev = insert_forward(key,value,position);//ver si se usa
-            if(m_type == 2){ //nodo ref ; sino inserta arriba va a entrar aca
-                return (*getpChildNode(position))->getpChild()->insert(key,value);//cambiar por funcion while
+            insert_forward(key,value,position);
+            if(m_type == 2){
+                return (*getpChildNode(position))->getpChild()->insert(key,value);
             }
-            
-
             return this;
-
         }
 
 };
@@ -308,30 +293,20 @@ class CBPlus{
 
     private:
                 
-        BPlusPage_* balance(BPlusPage_*& pBplusPage){ //subir, dividir y reasignar punteros
+        BPlusPage_* balance(BPlusPage_*& pBplusPage){
             // cout<<"BALANCEANDO : "<<pBplusPage->print()<<endl;
             // if(pBplusPage->getParent()){cout<<"padre : "<<pBplusPage->getParent()->print()<<endl;}
             
-
             size_t maxDegree = pBplusPage->getMaxDegree();
             size_t type = pBplusPage->getType();
             int divNode = maxDegree / 2;
-            //cout<<"division : "<<division<<endl;
             
             Node* pNodeDivision = pBplusPage->getpNode(divNode);
-            value_type key = pNodeDivision->getData();//mismo creo
-            //cout<<"key : "<<key<<endl;
-            Node* pPrevNodeDivision = pBplusPage->getpNode(divNode - 1);//mismo creo
-            //cout<<"pPrevNodeDivision : "<<pPrevNodeDivision->getData()<<endl;
-            //BPlusPage_* BplusPage1 =  new BPlusPage_(maxDegree, type);
+            value_type key = pNodeDivision->getData();
+            Node* pPrevNodeDivision = pBplusPage->getpNode(divNode - 1);
             BPlusPage_* BplusPage2 =  new BPlusPage_(maxDegree, type);
-            //cout<<"divNode : "<<divNode<<endl;
             pBplusPage->setSize(divNode);
-
-            //BplusPage2->setSize( divNode + 1 );
             BplusPage2->setSize( (maxDegree % 2 == 0?divNode:divNode+1) );
-
-
 
 
             Node* pTailFirstPage = pPrevNodeDivision;//in case type = 2
@@ -344,10 +319,8 @@ class CBPlus{
             if(type == 2){
 
                 int divChildNode = (maxDegree+1) / 2;
-                //cout<<"divChildNode : "<<divChildNode<<endl;
                 //ChildNode_* pPrevChildNodeDivision = *(pBplusPage->getpChildNode(divChildNode - 1));//it's correct but I just modify in order to coincide with the example page
                 ChildNode_* pPrevChildNodeDivision = *(pBplusPage->getpChildNode( (maxDegree % 2 == 0?divChildNode:divChildNode - 1) ));
-                //cout<<"pPrevChildNodeDivision : "<<pPrevChildNodeDivision->getpChild()->print()<<endl;
                 pBplusPage->setChildSize(divChildNode);
                 BplusPage2->setChildSize( (maxDegree % 2 == 0?divChildNode+1:divChildNode) );
                 BplusPage2->setpChildHead(pPrevChildNodeDivision->getpNext());
@@ -365,66 +338,32 @@ class CBPlus{
             
 
             
-            
-            //esta cuestion tiene que dinamizarse usando el maxDegree en un while seguro
             size_t pos = 0;
             BPlusPage_* pParent = pBplusPage->getParent();
-            pParent = (pParent?pParent:new BPlusPage_(maxDegree, 2)); //ver si necesita referenciar el padre a su padre
-            
-            //if(type == 1){BplusPage1->setpPrev(pBplusPage->getpPrev());}  
+            pParent = (pParent?pParent:new BPlusPage_(maxDegree, 2));
+
+
             if(type == 1){
-                BplusPage2->setpPrev(pBplusPage);//talvez no es necesario el puntero prev
+                BplusPage2->setpPrev(pBplusPage);//mb nɑːt necsy prev ˈpɔɪn.t̬ɚ
                 BplusPage2->setpNext(pBplusPage->getpNext());
                 pBplusPage->setpNext(BplusPage2);
             }
 
             pBplusPage->setParent(pParent);
             BplusPage2->setParent(pParent);
-
-            //cuando estoy dividiendo una pagina tipo 2, los hijos no estan apuntando bien a sus padres
-            //cuando divido, no estos avisando a la descencia quien es su nuevo padre----
-            // ChildNode_* pTemp = pParent->getpChildHead();
-            // while(pTemp){
-            //     pTemp->getpChild()->setParent(pParent);
-            //     pTemp = pTemp->getpNext();
-            // }
-            
                        
             Node** pPrevParent = pParent->findPrev(key,pos);
-            //cout<<"pos : "<<pos<<endl;
             Node* pNew = new Node(key);
-            // pNew->setpNext(pPrevParent->getpNext());
-            // pPrevParent->setpNext(pNew);
-            ::CreateBridge(*pPrevParent, pNew, &Node::m_pNext); //ver solo asignar key
+            ::CreateBridge(*pPrevParent, pNew, &Node::m_pNext);
             if( !pNew->getpNext() )
                 pParent->setpTail(pNew);
             pParent->sizePlus(1);
 
-            //pos++;
             ChildNode_* pchild2 = new ChildNode_(BplusPage2);
             ChildNode_* pchild1 = new ChildNode_(pBplusPage,(*(pParent->getpChildNode(pos+1))));
             
             pParent->setpChildNode(pos,pchild1);
             pParent->pushChildNode(pos+1,pchild2);
-            
-
-            //falta ver los child nodes
-
-
-            //ver si se ah partido una pagina del tipo data
-            // if(type == 1 && pBplusPage->getpPrev() == nullptr){
-            //     m_pData = BplusPage1;
-            // }
-
-
-            
-            //pBplusPage->~BPlusPage();
-            //delete
-
-
-            //que apunten a las mitades
-            //insertar el valor medio en el padre, considerar desplazamiento en nodos
-            //el padre debe apuntar a estos dos hijos, ver si ocurre desplazamiento en hijos punteros
 
             return pParent;
         }
@@ -486,13 +425,9 @@ class CBPlus{
             
         }
 
-        void writeAsTree  (ostream &os)    {   writeAsTree  (m_pRoot, os, 0);  }//write
+        void writeAsTree  (ostream &os)    {   writeAsTree  (m_pRoot, os, 0);  }
 
         void print(){
-            // cout<<"m_size : "<<m_size<<endl;
-            // cout<<"IMPRIMIENDO ROOT"<<endl;
-            // m_pRoot->printRoot();
-            // cout<<endl;
             cout<<"IMPRIMIENDO DATA"<<endl;
             m_pData->printData();
         }
