@@ -8,7 +8,7 @@
 #include "foreach.h"
 #include "binarytree.h"
 #include "avl.h"
-#include "bplus.h"
+#include "BPlus.h"
 using namespace std;
 
 template <typename T, int N>
