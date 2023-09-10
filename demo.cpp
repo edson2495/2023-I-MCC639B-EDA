@@ -8,6 +8,7 @@
 #include "foreach.h"
 #include "binarytree.h"
 #include "avl.h"
+#include "bplus.h"
 using namespace std;
 
 template <typename T, int N>
@@ -343,6 +344,52 @@ void DemoAVLTree()
     test>>AVLTree2;
     cout<<"Printing using << : "<<endl<<AVLTree2<<endl;
 
+
+}
+
+void DemoBPlus(){
+    
+    cout <<endl<< "-----------------------------------Demo B+ Tree------------------------------------" << endl;
+
+    using traitDesc = BPlusTreeTrait< INT,string, std::less< NodeBinaryTree< INT,string > > >;
+    using value_type = typename traitDesc::value_type;
+    using LinkedValueType = typename traitDesc::LinkedValueType;
+
+    CBPlus< traitDesc > Bplus(3);
+
+    vector<value_type> keys = {50,100,150,30,200,250,170,120,300,350,180,175};//75
+    vector<LinkedValueType> values = {"a","b","c","d","e","f","g","h","i","j","k","l"};
+    size_t n = keys.size();
+    for(size_t i = 0;i<n;i++){
+        //cout<<"insertando : "<<keys[i]<<endl;
+        Bplus.insert(keys[i],values[i]);
+        //cout<<"insertado"<<endl;
+        //Bplus.writeAsTree(cout);
+        //cout<<endl;
+    }
+    cout<<endl;
+    cout<<endl;
+    Bplus.writeAsTree(cout);
+    //Bplus.print();
+    cout<<endl;
+    cout<<"Foreach :"<<endl;
+    Bplus.forech(
+        [](BPlusPage<traitDesc>& page, ostream &os){
+            page.writeKeysAndValues(os);
+        },
+        cout
+    );
+    cout<<endl;
+    cout<<endl;
+
+    cout<<"-------------Reading from test.txt-------------"<<endl;
+    ifstream test("test.txt");
+    using traitFloatIntDesc = BPlusTreeTrait< TX,INT, std::less< NodeBinaryTree< TX,INT > > >;
+    CBPlus< traitFloatIntDesc > Bplus2(3);
+    test>>Bplus2;
+    cout<<"Printing using << : "<<endl<<Bplus2<<endl;
+    //Bplus2.print();
+    cout<<endl;
 
 }
 

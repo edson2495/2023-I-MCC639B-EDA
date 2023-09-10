@@ -18,7 +18,8 @@ int main()
 
     //DemoHeap();
     //DemoBinaryTree();
-    DemoAVLTree();
+    //DemoAVLTree();
+    DemoBPlus();
     // DemoHash();
 
     // DemoPreandPostIncrement();

@@ -24,7 +24,7 @@ void foreach(Iterator ItBegin, Iterator ItEnd, F ope, Args&&... args){
     auto iter = ItBegin;
     for(; iter != ItEnd ; ++iter)
         invoke(ope, *iter, forward<Args>(args)...);
-    invoke(ope, *iter, forward<Args>(args)...);
+    //invoke(ope, *iter, forward<Args>(args)...);
 }
 
 // template <typename Iterator, typename Callable, typename... Args>

@@ -13,6 +13,7 @@ void DemoHeap();
 
 void DemoBinaryTree();
 void DemoAVLTree();
+void DemoBPlus();
 void DemoHash();
 
 
