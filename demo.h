@@ -13,6 +13,7 @@ void DemoHeap();
 
 void DemoBinaryTree();
 void DemoHash();
+void DemoMapEdson();
 
 void DemoMap();
 

@@ -7,6 +7,9 @@
 #include "array.h"
 #include "matrix.h"
 #include "foreach.h"
+#include "avl.h"
+#include "hash.h"
+
 using namespace std;
 
 template <typename T, int N>
@@ -400,5 +403,45 @@ void DemoMap(){
     for (auto it = m.rbegin(); it != m.rend(); it++)
         cout << it->first << " = " << it->second << "; " << endl;
  
+}
+
+void DemoMapEdson(){
+
+    cout <<endl<< "-----------------------------------DemoMapEdson------------------------------------" << endl;
+
+    using traitAsc = BinaryTreeTrait< int,string, std::less< NodeBinaryTree< int,string > > >;
+    using Node = typename traitAsc::Node;
+
+    CHash<traitAsc> map;
+    map[100] = "Edson";
+    map[50] = "Ernesto";
+    map[150] = "Pierr";
+    map[200] = "Guiomar";
+    map[250] = "Francisco";
+    map[100] = "Edson Greig";//modifying the text
+    
+    cout<<endl<<"---------Forward iterator---------"<<endl;
+
+    foreach(
+        map.begin(),
+        map.end(),
+        [](Node& node, ostream &os){
+            os << '[' << node.getData() << "] = " << node.getValue() << "; " << endl;
+        },
+        cout
+    );
+
+    cout<<endl<<"---------Forward iterator---------"<<endl;
+
+    foreach(
+        map.rbegin(),
+        map.rend(),
+        [](Node& node, ostream &os){
+            os << '[' << node.getData() << "] = " << node.getValue() << "; " << endl;
+        },
+        cout
+    );
+
+    cout<<endl;
 
 }
