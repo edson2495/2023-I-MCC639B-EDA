@@ -185,7 +185,7 @@ void DemoArray(){
     of << v2 << endl; 
     cout << "DemoArray finished !" << endl;
 
-    using TraitStringString = ArrayTrait<string, string  , std::less<NodeArray<string, string> &>>;
+    using TraitStringString = XTrait<string, string  , std::less<KeyNode<string, string> &>>;
     CArray< TraitStringString > vx("Ernesto Cuadros");
     vx.insert("Ernesto", "Cuadros");
     vx.insert("Luis"   , "Tejada");
@@ -357,20 +357,37 @@ void DemoHash()
 //     DemoBinaryTree(myDescBinaryTree);
 // }
 
-// #include "btree.h"
-// void DemoTree()
-// {
-//     BTree < BtreeTrait<char,long> > bt;
-//     const char * keys = "DYZakHIUwxVJ203ejOP9Qc8AdtuEop1XvTRghSNbW567BfiCqrs4FGMyzKLlmn";
-//     for(size_t i = 0; keys[i]; i++)
-//         {
-//             //cout<<"Inserting "<<keys[i]<<endl;
-//             //result = bt.Insert(keys4[i], i*i);
-//             bt.Insert(keys[i], i*i);
-//             //bt.Print(cout);
-//         }
-//     bt.Print(cout);
-//     exit(0);
+//12 final, 13 ejemplo, 14 cod y ejemplo
+#include "btree.h"
+void DemoBTree(){
 
-// }
+    BTree < BTreeTrait<char,long> > btree1;
+    //const char * keys = "DYZakHIUwxVJ203ejOP9Qc8AdtuEop1XvTRghSNbW567BfiCqrs4FGMyzKLlmn";
+    const char * keys = "abcdefghi";
+    for(size_t i = 0; keys[i]; i++)
+        {
+            //cout<<"Inserting "<<keys[i]<<endl;
+            //result = bt.Insert(keys4[i], i*i);
+            btree1.Insert(keys[i], i*i);
+            //bt.Print(cout);
+            //cout<<"--------------------------------"<<endl;
+        }
+    //btree1.Print(cout);
+    cout<<btree1;
+
+    cout<<endl<<endl;
+
+    cout<<"-------------Reading (>>) from test.txt-------------"<<endl;
+    ifstream test("test.txt");
+    BTree < BTreeTrait<float,int> > btree2;
+    test>>btree2;
+    cout<<"Printing using << : "<<endl<<btree2<<endl;
+
+}
+
+//el iterator this : Btree class padre
+//moverme entre los page y en cada page sus elementos
+//ver un dato que pueda ir avanzando,si lo tengo con printed el dato se iba con el nuevo iterador
+
+
 

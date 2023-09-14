@@ -2,33 +2,33 @@
 #define __BTREE_H__
 
 #include <iostream>
+#include <bits/stdc++.h>
 #include "btreepage.h"
 #define DEFAULT_BTREE_ORDER 3
 
 const size_t MaxHeight = 5; 
 
-template <typename _keyType, typename _ObjIDType>
-struct BTreeTrait
-{
-       using keyType = _keyType;
-       using ObjIDType = _ObjIDType;
+template <typename _K, typename _V>
+struct BTreeTrait{
+    using  value_type      = _K;
+    using  LinkedValueType = _V;
 };
 
 template <typename Trait>
 class BTree // this is the full version of the BTree
 {
-       typedef typename Trait::keyType    keyType;
-       typedef typename Trait::ObjIDType    ObjIDType;
+       typedef typename Trait::value_type    value_type;
+       typedef typename Trait::LinkedValueType    LinkedValueType;
        
        typedef CBTreePage <Trait> BTNode;// useful shorthand
 
 public:
        //typedef ObjectInfo iterator;
        // TODO replace thius functions by foreach
-       typedef typename BTNode::lpfnForEach2    lpfnForEach2;
-       typedef typename BTNode::lpfnForEach3    lpfnForEach3;
-       typedef typename BTNode::lpfnFirstThat2  lpfnFirstThat2;
-       typedef typename BTNode::lpfnFirstThat3  lpfnFirstThat3;
+       // typedef typename BTNode::lpfnForEach2    lpfnForEach2;
+       // typedef typename BTNode::lpfnForEach3    lpfnForEach3;
+       // typedef typename BTNode::lpfnFirstThat2  lpfnFirstThat2;
+       // typedef typename BTNode::lpfnFirstThat3  lpfnFirstThat3;
 
        typedef typename BTNode::ObjectInfo      ObjectInfo;
 
@@ -46,27 +46,58 @@ public:
        //int           Open (char * name, int mode);
        //int           Create (char * name, int mode);
        //int           Close ();
-       bool            Insert (const keyType key, const long ObjID);
-       bool            Remove (const keyType key, const long ObjID);
-       ObjIDType       Search (const keyType key)
-       {      ObjIDType ObjID = -1;
-              m_Root.Search(key, ObjID);
-              return ObjID;
+       bool            Insert (const value_type key, const LinkedValueType value);
+       bool            Remove (const value_type key, const LinkedValueType value);
+       LinkedValueType       Search (const value_type key)
+       {      LinkedValueType value = -1;
+              m_Root.Search(key, value);
+              return value;
        }
        size_t            size()  { return m_NumKeys; }
        size_t            height() { return m_Height;      }
        size_t            GetOrder() { return m_Order;     }
 
+       void read(istream &is){ //created by Edson Cáceres
+              size_t file_size;
+              value_type key;
+              LinkedValueType value;
+              is>>file_size;
+
+              string line;
+              getline(is, line); //to avoid 20
+              
+              while(getline(is, line) && this->m_NumKeys != file_size){ //keeping in mind the file_size
+                     
+                     stringstream ss(line);
+                     string word;
+
+                     ss >> key;
+                     ss >> word;
+                     ss >> value;
+                     Insert(key,value);
+              }
+       }
+
        void            Print (ostream &os)
        {               m_Root.Print(os);                              }
-       void            ForEach( lpfnForEach2 lpfn, void *pExtra1 )
-       {               m_Root.ForEach(lpfn, 0, pExtra1);              }
-       void            ForEach( lpfnForEach3 lpfn, void *pExtra1, void *pExtra2)
-       {               m_Root.ForEach(lpfn, 0, pExtra1, pExtra2);     }
-       ObjectInfo*     FirstThat( lpfnFirstThat2 lpfn, void *pExtra1 )
-       {               return m_Root.FirstThat(lpfn, 0, pExtra1);     }
-       ObjectInfo*     FirstThat( lpfnFirstThat3 lpfn, void *pExtra1, void *pExtra2)
-       {               return m_Root.FirstThat(lpfn, 0, pExtra1, pExtra2);   }
+
+       template <typename F, typename... Args> //created by Edson Cáceres ; vacan pero no se esta usando xd
+       void ForEach(F lpfn, Args&&... args){
+              m_Root.ForEach(lpfn, 0, args...);
+       }
+       // void            ForEach( lpfnForEach2 lpfn, void *pExtra1 )
+       // {               m_Root.ForEach(lpfn, 0, pExtra1);              }
+       // void            ForEach( lpfnForEach3 lpfn, void *pExtra1, void *pExtra2)
+       // {               m_Root.ForEach(lpfn, 0, pExtra1, pExtra2);     }
+
+       template <typename F, typename... Args> //created by Edson Cáceres
+       void FirstThat(F lpfn, Args&&... args){
+              m_Root.FirstThat(lpfn, 0, args...);
+       }
+       // ObjectInfo*     FirstThat( lpfnFirstThat2 lpfn, void *pExtra1 )
+       // {               return m_Root.FirstThat(lpfn, 0, pExtra1);     }
+       // ObjectInfo*     FirstThat( lpfnFirstThat3 lpfn, void *pExtra1, void *pExtra2)
+       // {               return m_Root.FirstThat(lpfn, 0, pExtra1, pExtra2);   }
        //typedef               ObjectInfo iterator;
 
 protected:
@@ -77,10 +108,10 @@ protected:
        bool            m_Unique;  // Accept the elements only once ?
 };     
 
-// TODO change ObjID by LinkedValueType value
+// TODO change value by LinkedValueType value
 template <typename Trait>
-bool BTree<Trait>::Insert(const keyType key, const long ObjID){
-       bt_ErrorCode error = m_Root.Insert(key, ObjID);
+bool BTree<Trait>::Insert(const value_type key, const LinkedValueType value){
+       bt_ErrorCode error = m_Root.Insert(key, value);
        if( error == bt_duplicate )
                return false;
        m_NumKeys++;
@@ -93,9 +124,9 @@ bool BTree<Trait>::Insert(const keyType key, const long ObjID){
 }
 
 template <typename Trait>
-bool BTree<Trait>::Remove (const keyType key, const long ObjID)
+bool BTree<Trait>::Remove (const value_type key, const LinkedValueType value)
 {
-       bt_ErrorCode error = m_Root.Remove(key, ObjID);
+       bt_ErrorCode error = m_Root.Remove(key, value);
        if( error == bt_duplicate || error == bt_nofound )
                return false;
        m_NumKeys--;
@@ -106,7 +137,17 @@ bool BTree<Trait>::Remove (const keyType key, const long ObjID)
 }
 
 // TODO Add operator<<
+template <typename T> //created by Edson Cáceres
+ostream &operator<<(ostream &os, BTree<T> &obj){
+    obj.Print(cout);
+    return os;
+}
 
 // TODO Add operator>>
+template <typename T>
+istream &operator>>(istream &is, BTree<T> &obj){
+    obj.read(is);
+    return is;
+}
 
 #endif
