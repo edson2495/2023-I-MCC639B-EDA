@@ -410,6 +410,7 @@ void DemoMapEdson(){
     cout <<endl<< "-----------------------------------DemoMapEdson------------------------------------" << endl;
 
     using traitAsc = BinaryTreeTrait< int,string, std::less< NodeBinaryTree< int,string > > >;
+    using traitAsc2 = BinaryTreeTrait< float,int, std::less< NodeBinaryTree< float,int > > >;
     using Node = typename traitAsc::Node;
 
     CHash<traitAsc> map;
@@ -431,7 +432,7 @@ void DemoMapEdson(){
         cout
     );
 
-    cout<<endl<<"---------Forward iterator---------"<<endl;
+    cout<<endl<<"---------Backward iterator---------"<<endl;
 
     foreach(
         map.rbegin(),
@@ -443,5 +444,11 @@ void DemoMapEdson(){
     );
 
     cout<<endl;
+
+    cout<<"-------------Reading from test.txt-------------"<<endl;
+    CHash<traitAsc2> map2;
+    ifstream test("test.txt");
+    test>>map2;
+    cout<<"Printing using operator<< : "<<endl<<map2<<endl;
 
 }

@@ -2,7 +2,7 @@
 #define __HASH_ITERATOR_H__
 
 template <typename Container>
-class hash_forward_iterator{
+class hash_forward_iterator{// created by Edson Cáceres
     
   public: 
     typedef typename Container::Node           Node;
@@ -34,11 +34,11 @@ class hash_forward_iterator{
     bool operator==(myself iter)   { return m_index == iter.m_index; }
     bool operator!=(myself iter)   { return !(*this == iter);        }
 
-    Node& operator*(){
+    Node& operator*(){// created by Edson Cáceres
         return *(m_pContainer->search(m_pContainer->getKey(m_index)));
     }
 
-    myself operator++() {
+    myself operator++() {// created by Edson Cáceres
         m_index++;
         return *this;
     }
@@ -46,7 +46,7 @@ class hash_forward_iterator{
 };
 
 template <typename Container>
-class hash_backward_iterator{
+class hash_backward_iterator{// created by Edson Cáceres
     
   public: 
     typedef typename Container::Node           Node;
@@ -55,7 +55,6 @@ class hash_backward_iterator{
   private:
 
     Container *m_pContainer;
-    //Node      *m_pNode;
     size_t m_index;
 
   public:
@@ -79,11 +78,11 @@ class hash_backward_iterator{
     bool operator==(myself iter)   { return m_index == iter.m_index; }
     bool operator!=(myself iter)   { return !(*this == iter);        }
 
-    Node& operator*(){
+    Node& operator*(){// created by Edson Cáceres
         return *(m_pContainer->search(m_pContainer->getKey(m_index)));
     }
 
-    myself operator++() {
+    myself operator++() {// created by Edson Cáceres
         m_index--;
         return *this;
     }
