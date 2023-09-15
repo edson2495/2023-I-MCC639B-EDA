@@ -15,5 +15,6 @@ void DemoBinaryTree();
 void DemoHash();
 
 void DemoMap();
+void DemoGraph();
 
 #endif // __DEMO_H__
