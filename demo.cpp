@@ -2,6 +2,9 @@
 #include <fstream>  // ofstream, ifstream
 #include <cmath>
 #include <memory>
+#include <thread> // std::thread
+#include <mutex>  // std::mutex
+
 #include "demo.h"
 #include "array.h"
 #include "matrix.h"
@@ -357,22 +360,45 @@ void DemoHash()
 //     DemoBinaryTree(myDescBinaryTree);
 // }
 
+//https://en.cppreference.com/w/cpp/thread/mutex
+//https://en.cppreference.com/w/cpp/thread/thread/thread
+template <typename F, typename C, typename... Args> //created by Edson Cáceres
+void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
+    thread th(func,&object,args...);
+    th.join();
+}
+
 //12 final, 13 ejemplo, 14 cod y ejemplo
 #include "btree.h"
 void DemoBTree(){
 
+    //using 
+
     BTree < BTreeTrait<char,long> > btree1;
     //const char * keys = "DYZakHIUwxVJ203ejOP9Qc8AdtuEop1XvTRghSNbW567BfiCqrs4FGMyzKLlmn";
     const char * keys = "abcdefghi";
-    for(size_t i = 0; keys[i]; i++)
-        {
-            //cout<<"Inserting "<<keys[i]<<endl;
-            //result = bt.Insert(keys4[i], i*i);
-            btree1.Insert(keys[i], i*i);
-            //bt.Print(cout);
-            //cout<<"--------------------------------"<<endl;
-        }
+    for(size_t i = 0; keys[i]; i++){
+
+        //btree1.Insert(keys[i], i*i);
+        //execFuncInConcurrencyControl(&BTree < BTreeTrait<char,long> >::Insert,btree1,keys[i], i*i);
+        
+        //btree1.execFuncInConcurrencyControl(&BTree < BTreeTrait<char,long> >::Insert,btree1,keys[i], i*i);
+        btree1.execFuncInConcurrencyControl(
+            &BTree < BTreeTrait<char,long> >::Insert,
+            btree1,
+            keys[i],
+            i*i
+        );
+
+        //bt.Print(cout);
+        //cout<<"--------------------------------"<<endl;
+    }
     //btree1.Print(cout);
+    cout<<btree1;
+
+    cout<<endl;
+    cout<<"Deleting key d : "<<endl;
+    btree1.execFuncInConcurrencyControl(&BTree < BTreeTrait<char,long> >::Remove,btree1,keys[3], 9);
     cout<<btree1;
 
     cout<<endl<<endl;

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <bits/stdc++.h>
+
 #include "btreepage.h"
 #define DEFAULT_BTREE_ORDER 3
 
@@ -43,9 +44,28 @@ public:
               m_Height = 1;
        }
        ~BTree() {}
-       //int           Open (char * name, int mode);
-       //int           Create (char * name, int mode);
-       //int           Close ();
+
+       //https://en.cppreference.com/w/cpp/thread/mutex
+       //https://en.cppreference.com/w/cpp/thread/thread/thread
+       template <typename F, typename C, typename... Args> //created by Edson Cáceres
+       //void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
+       void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
+              thread th(func,&object,args...);
+
+              //thread th(&funcInConcurrencyControl<F,Args&&...>,&object,func,args...);
+
+              th.join();
+       }
+
+       template <typename F, typename... Args> //created by Edson Cáceres
+       void funcInConcurrencyControl(F&& func, Args&&... args){
+       //void funcInConcurrencyControl(F&& func, const value_type key, const LinkedValueType value){
+              mtx.lock();//written by Edson Cáceres
+              invoke(func, forward<Args>(args)...);
+              //invoke(func, key, value);
+              mtx.unlock();//written by Edson Cáceres
+       }
+
        bool            Insert (const value_type key, const LinkedValueType value);
        bool            Remove (const value_type key, const LinkedValueType value);
        LinkedValueType       Search (const value_type key)
@@ -106,33 +126,39 @@ protected:
        size_t          m_Order;   // order of tree
        size_t          m_NumKeys; // number of keys
        bool            m_Unique;  // Accept the elements only once ?
+
+       mutex mtx;           // mutex for critical section ; written by Edson Cáceres
+
 };     
 
 // TODO change value by LinkedValueType value
 template <typename Trait>
 bool BTree<Trait>::Insert(const value_type key, const LinkedValueType value){
+       mtx.lock();//written by Edson Cáceres
        bt_ErrorCode error = m_Root.Insert(key, value);
        if( error == bt_duplicate )
-               return false;
+              return false;
        m_NumKeys++;
        if( error == bt_overflow )
        {
                m_Root.SplitRoot();
                m_Height++;
        }
+       mtx.unlock();//written by Edson Cáceres
        return true;
 }
 
 template <typename Trait>
-bool BTree<Trait>::Remove (const value_type key, const LinkedValueType value)
-{
+bool BTree<Trait>::Remove (const value_type key, const LinkedValueType value){
+       mtx.lock();//written by Edson Cáceres
        bt_ErrorCode error = m_Root.Remove(key, value);
        if( error == bt_duplicate || error == bt_nofound )
-               return false;
+              return false;
        m_NumKeys--;
 
        if( error == bt_rootmerged )
-               m_Height--;
+              m_Height--;
+       mtx.unlock();//written by Edson Cáceres
        return true;
 }
 
