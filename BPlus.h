@@ -121,7 +121,7 @@ class BPlusPage{
 
     private:
         
-        Node **findPrev(Node *&rpPrev, value_type &elem, size_t &position){
+        Node **findPrev(Node *&rpPrev, const value_type &elem, size_t &position){
             if(!rpPrev || Compfn(elem, rpPrev->getData()) )//Compfn : a es mayor/menor que b retorna true
                 return &rpPrev; // Retorna la direccion del puntero que me apunta
             position++;
@@ -138,11 +138,11 @@ class BPlusPage{
             return new Node(key,pNext);
         }
 
-        Node* CreateNode(value_type &key, LinkedValueType value, Node* pNext=nullptr){
+        Node* CreateNode(const value_type &key, const LinkedValueType value, Node* pNext=nullptr){
             return new Node(key,value,pNext);
         }
 
-        Node* insert_forward(value_type &key, LinkedValueType value, size_t &position){
+        Node* insert_forward(const value_type &key, const LinkedValueType value, size_t &position){
             Node **pParent = findPrev(key,position);
             if(m_type == 1){ //nd
                 Node *pNew = CreateNode(key,value);
@@ -199,7 +199,7 @@ class BPlusPage{
         BPlusPage* getParent(){return m_pParent;}
         void setParent(BPlusPage*& pParent){m_pParent = pParent;}
 
-        Node **findPrev(value_type &elem, size_t &position) {   return findPrev(m_pHead, elem,position);   }
+        Node **findPrev(const value_type &elem, size_t &position) {   return findPrev(m_pHead, elem,position);   }
 
         Node* getpNode(size_t pos){
             assert(m_size > 0);
@@ -260,7 +260,7 @@ class BPlusPage{
 
         bool isBalanced(){return m_size < m_maxDegree;}
 
-        myself* insert(value_type &key, LinkedValueType value){
+        myself* insert(const value_type &key, const LinkedValueType value){
             size_t position = 0;
             insert_forward(key,value,position);
             if(m_type == 2){
@@ -290,6 +290,7 @@ class CBPlus{
         size_t m_maxDegree;
         BPlusPage_* m_pRoot = nullptr;
         BPlusPage_* m_pData = nullptr;
+        mutex mtx;
 
     private:
                 
@@ -408,8 +409,15 @@ class CBPlus{
             foreach(begin(),end(), func,args...);
         }
 
-        void insert(value_type &key, LinkedValueType value){//para le mutex agregar una funcion externa y esta hacerla interna
+        template <typename F, typename C, typename... Args> //created by Edson Cáceres
+        void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
+            thread th(func,&object,args...);
+            th.join();
+        }
+
+        void insert(const value_type &key, const LinkedValueType value){
             
+            mtx.lock();
             BPlusPage_* pBPlusPage = m_pRoot->insert(key,value);
             m_size++;
 
@@ -421,7 +429,7 @@ class CBPlus{
             if(pBPlusPage->getParent() == nullptr){
                 m_pRoot = pBPlusPage;
             }
-            
+            mtx.unlock();
             
         }
 

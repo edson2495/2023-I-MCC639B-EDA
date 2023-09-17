@@ -362,7 +362,15 @@ void DemoBPlus(){
     size_t n = keys.size();
     for(size_t i = 0;i<n;i++){
         //cout<<"insertando : "<<keys[i]<<endl;
-        Bplus.insert(keys[i],values[i]);
+        
+        //Bplus.insert(keys[i],values[i]);
+        Bplus.execFuncInConcurrencyControl(
+            &CBPlus< traitDesc >::insert,
+            Bplus,
+            keys[i],
+            values[i]
+        );
+
         //cout<<"insertado"<<endl;
         //Bplus.writeAsTree(cout);
         //cout<<endl;
