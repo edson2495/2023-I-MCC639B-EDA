@@ -372,24 +372,19 @@ void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
 #include "btree.h"
 void DemoBTree(){
 
-    //using 
+    cout<<endl<<"-----------------------------------DemoBTree------------------------------------"<<endl<<endl;
 
     BTree < BTreeTrait<char,long> > btree1;
     //const char * keys = "DYZakHIUwxVJ203ejOP9Qc8AdtuEop1XvTRghSNbW567BfiCqrs4FGMyzKLlmn";
     const char * keys = "abcdefghi";
     for(size_t i = 0; keys[i]; i++){
-
-        //btree1.Insert(keys[i], i*i);
-        //execFuncInConcurrencyControl(&BTree < BTreeTrait<char,long> >::Insert,btree1,keys[i], i*i);
         
-        //btree1.execFuncInConcurrencyControl(&BTree < BTreeTrait<char,long> >::Insert,btree1,keys[i], i*i);
         btree1.execFuncInConcurrencyControl(
             &BTree < BTreeTrait<char,long> >::Insert,
             btree1,
             keys[i],
             i*i
         );
-
         //bt.Print(cout);
         //cout<<"--------------------------------"<<endl;
     }
@@ -411,9 +406,6 @@ void DemoBTree(){
 
 }
 
-//el iterator this : Btree class padre
-//moverme entre los page y en cada page sus elementos
-//ver un dato que pueda ir avanzando,si lo tengo con printed el dato se iba con el nuevo iterador
 
 
 
