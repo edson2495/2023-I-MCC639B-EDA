@@ -101,7 +101,7 @@ public:
        void            Print (ostream &os)
        {               m_Root.Print(os);                              }
 
-       template <typename F, typename... Args> //created by Edson Cáceres ; vacan pero no se esta usando xd
+       template <typename F, typename... Args> //created by Edson Cáceres
        void ForEach(F lpfn, Args&&... args){
               m_Root.ForEach(lpfn, 0, args...);
        }
