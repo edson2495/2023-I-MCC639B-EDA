@@ -360,14 +360,6 @@ void DemoHash()
 //     DemoBinaryTree(myDescBinaryTree);
 // }
 
-//https://en.cppreference.com/w/cpp/thread/mutex
-//https://en.cppreference.com/w/cpp/thread/thread/thread
-template <typename F, typename C, typename... Args> //created by Edson Cáceres
-void execFuncInConcurrencyControl(F&& func, C& object, Args&&... args){
-    thread th(func,&object,args...);
-    th.join();
-}
-
 //12 final, 13 ejemplo, 14 cod y ejemplo
 #include "btree.h"
 void DemoBTree(){
@@ -378,17 +370,13 @@ void DemoBTree(){
     //const char * keys = "DYZakHIUwxVJ203ejOP9Qc8AdtuEop1XvTRghSNbW567BfiCqrs4FGMyzKLlmn";
     const char * keys = "abcdefghi";
     for(size_t i = 0; keys[i]; i++){
-        
         btree1.execFuncInConcurrencyControl(
             &BTree < BTreeTrait<char,long> >::Insert,
             btree1,
             keys[i],
             i*i
         );
-        //bt.Print(cout);
-        //cout<<"--------------------------------"<<endl;
     }
-    //btree1.Print(cout);
     cout<<btree1;
 
     cout<<endl;
