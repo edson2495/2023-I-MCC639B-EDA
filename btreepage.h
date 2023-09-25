@@ -84,13 +84,6 @@ class CBTreePage //: public SimpleIndex <value_type>
        typedef CBTreePage<Trait>    BTPage;         // useful shorthand
        typedef tagObjectInfo<value_type, LinkedValueType> ObjectInfo;
 
-//         // TODO replace by general foreach (foreach.h)
-//        typedef void (*lpfnForEach2)(ObjectInfo &info, size_t level, void *pExtra1);
-//        typedef void (*lpfnForEach3)(ObjectInfo &info, size_t level, void *pExtra1, void *pExtra2);
-
-//         // TODO create firstthat (foreach.h)
-//        typedef ObjectInfo *(*lpfnFirstThat2)(ObjectInfo &info, size_t level, void *pExtra1);
-//        typedef ObjectInfo *(*lpfnFirstThat3)(ObjectInfo &info, size_t level, void *pExtra1, void *pExtra2);
  public:
        CBTreePage(size_t maxKeys, bool unique = true);
        virtual ~CBTreePage();
@@ -100,9 +93,7 @@ class CBTreePage //: public SimpleIndex <value_type>
        bool            Search (const value_type &key, LinkedValueType &value);
        void            Print  (ostream &os);
 
-       // TODO: #7 ForEach must be a template inside this template
-        // void            ForEach(lpfnForEach2 lpfn, size_t level, void *pExtra1);
-        // void            ForEach(lpfnForEach3 lpfn, size_t level, void *pExtra1, void *pExtra2);
+        //my work
         template <typename F, typename... Args> //created by Edson Cáceres
         void ForEach(F lpfn, size_t level, Args&&... args){
                 for(size_t i = 0 ; i < m_KeyCount ; i++)
@@ -115,9 +106,7 @@ class CBTreePage //: public SimpleIndex <value_type>
                         m_SubPages[m_KeyCount]->ForEach(lpfn, level+1, args...);
         }
 
-       // TODO: #8 You may reduce these two function by using variadic templates
-//        ObjectInfo*     FirstThat(lpfnFirstThat2 lpfn, size_t level, void *pExtra1);
-//        ObjectInfo*     FirstThat(lpfnFirstThat3 lpfn, size_t level, void *pExtra1, void *pExtra2);
+        //my work
         template <typename F, typename... Args> //created by Edson Cáceres
         ObjectInfo* FirstThat(F lpfn, size_t level, Args&&... args){
                 ObjectInfo *pTmp;

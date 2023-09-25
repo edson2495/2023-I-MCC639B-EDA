@@ -39,6 +39,7 @@ public:
        }
        ~BTree() {}
 
+       //my work
        //https://en.cppreference.com/w/cpp/thread/mutex
        //https://en.cppreference.com/w/cpp/thread/thread/thread
        template <typename F, typename C, typename... Args> //created by Edson Cáceres
@@ -51,14 +52,15 @@ public:
               th.join();
        }
 
-       template <typename F, typename... Args> //created by Edson Cáceres
+       /*template <typename F, typename... Args> //created by Edson Cáceres
        void funcInConcurrencyControl(F&& func, Args&&... args){
        //void funcInConcurrencyControl(F&& func, const value_type key, const LinkedValueType value){
               mtx.lock();//written by Edson Cáceres
               invoke(func, forward<Args>(args)...);
               //invoke(func, key, value);
               mtx.unlock();//written by Edson Cáceres
-       }
+       }*/
+
 
        bool            Insert (const value_type key, const LinkedValueType value);
        bool            Remove (const value_type key, const LinkedValueType value);
@@ -115,6 +117,7 @@ protected:
 
 };     
 
+//my work
 // TODO change value by LinkedValueType value
 template <typename Trait>
 bool BTree<Trait>::Insert(const value_type key, const LinkedValueType value){
@@ -132,6 +135,7 @@ bool BTree<Trait>::Insert(const value_type key, const LinkedValueType value){
        return true;
 }
 
+//my work
 template <typename Trait>
 bool BTree<Trait>::Remove (const value_type key, const LinkedValueType value){
        mtx.lock();//written by Edson Cáceres
@@ -146,6 +150,7 @@ bool BTree<Trait>::Remove (const value_type key, const LinkedValueType value){
        return true;
 }
 
+//my work
 // TODO Add operator<<
 template <typename T> //created by Edson Cáceres
 ostream &operator<<(ostream &os, BTree<T> &obj){
@@ -153,8 +158,9 @@ ostream &operator<<(ostream &os, BTree<T> &obj){
     return os;
 }
 
+//my work
 // TODO Add operator>>
-template <typename T>
+template <typename T> //created by Edson Cáceres
 istream &operator>>(istream &is, BTree<T> &obj){
     obj.read(is);
     return is;
