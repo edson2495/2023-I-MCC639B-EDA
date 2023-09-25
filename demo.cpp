@@ -8,7 +8,7 @@
 #include "foreach.h"
 #include "binarytree.h"
 #include "avl.h"
-#include "BPlus.h"
+#include "bplus.h"
 using namespace std;
 
 template <typename T, int N>
@@ -347,7 +347,7 @@ void DemoAVLTree()
 
 }
 
-void DemoBPlus(){
+void DemoBPlus(){ // created by Edson Cáceres
     
     cout <<endl<< "-----------------------------------Demo B+ Tree------------------------------------" << endl;
 
@@ -361,24 +361,16 @@ void DemoBPlus(){
     vector<LinkedValueType> values = {"a","b","c","d","e","f","g","h","i","j","k","l"};
     size_t n = keys.size();
     for(size_t i = 0;i<n;i++){
-        //cout<<"insertando : "<<keys[i]<<endl;
-        
-        //Bplus.insert(keys[i],values[i]);
         Bplus.execFuncInConcurrencyControl(
             &CBPlus< traitDesc >::insert,
             Bplus,
             keys[i],
             values[i]
         );
-
-        //cout<<"insertado"<<endl;
-        //Bplus.writeAsTree(cout);
-        //cout<<endl;
     }
     cout<<endl;
     cout<<endl;
     Bplus.writeAsTree(cout);
-    //Bplus.print();
     cout<<endl;
     cout<<"Foreach :"<<endl;
     Bplus.forech(
@@ -396,7 +388,6 @@ void DemoBPlus(){
     CBPlus< traitFloatIntDesc > Bplus2(3);
     test>>Bplus2;
     cout<<"Printing using << : "<<endl<<Bplus2<<endl;
-    //Bplus2.print();
     cout<<endl;
 
 }
