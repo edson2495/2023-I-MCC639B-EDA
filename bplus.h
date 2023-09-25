@@ -271,7 +271,7 @@ class BPlusPage{
 
 };
 
-template <typename Traits>
+template <typename Traits> //created by Edson Cáceres
 class CBPlus{
 
     public:
@@ -294,7 +294,7 @@ class CBPlus{
 
     private:
                 
-        BPlusPage_* balance(BPlusPage_*& pBplusPage){
+        BPlusPage_* balance(BPlusPage_*& pBplusPage){ //created by Edson Cáceres
             // cout<<"BALANCEANDO : "<<pBplusPage->print()<<endl;
             // if(pBplusPage->getParent()){cout<<"padre : "<<pBplusPage->getParent()->print()<<endl;}
             
@@ -369,7 +369,7 @@ class CBPlus{
             return pParent;
         }
  
-        void writeAsTree(BPlusPage_* pPage, ostream &os, size_t level){
+        void writeAsTree(BPlusPage_* pPage, ostream &os, size_t level){ //created by Edson Cáceres
             if(pPage){
                 BPlusPage_* pParent = pPage->getParent();
                 int child_size = pPage->getChildSize();
@@ -415,7 +415,7 @@ class CBPlus{
             th.join();
         }
 
-        void insert(const value_type &key, const LinkedValueType value){
+        void insert(const value_type &key, const LinkedValueType value){ //created by Edson Cáceres
             
             mtx.lock();
             BPlusPage_* pBPlusPage = m_pRoot->insert(key,value);
